@@ -1,0 +1,118 @@
+import OpenAI from "openai";
+
+const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
+const BACKEND_URL = process.env.BACKEND_URL;
+
+const openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+});
+
+export const getComments = async (req, res) => {
+    const { id } = req.params;
+    // const response = await fetch(`https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&videoId=${id}&maxResults=100&key=${YOUTUBE_API_KEY}`, {
+    //     method: "GET"
+    // });
+
+    // const data = await response.json();
+
+    // console.log(data);
+
+
+
+    // if (data.error) {
+    //     console.log(data);
+    //     return res.status(data.error.code).json({ error: data.error.message });
+    // }
+
+
+    // const comments = data.items.map((item) => item.snippet.topLevelComment.snippet.textDisplay);
+    // console.log("Filtrelenmiş Yorumlar:" + comments);
+
+    const mockComments = []
+
+    const resp = await fetch(`${BACKEND_URL}/analyze-comments`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": req.headers.authorization
+        },
+        // body: JSON.stringify({ comments }),
+        body: JSON.stringify({ comments: mockComments })
+    })
+
+    const anaylzedData = await resp.json();
+
+    res.json(anaylzedData);
+}
+
+export const analizeComments = async (req, res) => {
+
+    try {
+        const { comments } = req.body;
+
+        if (!comments || !Array.isArray(comments)) {
+            return res.status(400).json({ error: "comments bir dizi olmalı" });
+        }
+
+        // console.log("POST" + comments + comments.length);
+        // res.status(200).json({ message: "ok" });
+
+        // GPT prompt oluştur
+        const prompt = `
+                        You are a helpful assistant for sentiment analysis and summarization.
+                        Analyze the following user comments about a YouTube video. 
+                        Return a JSON object with counts of positive, negative, and neutral comments, 
+                        and write natural language summaries for what users liked and disliked.
+
+                        Comments:
+                        ${comments.map((c, i) => `${i + 1}. ${c}`).join("\n")}
+
+                        Respond in JSON format like this:
+                        {
+                        "positive": <number>,
+                        "negative": <number>,
+                        "neutral": <number>,
+                        "liked_summary": "<natural language summary of what users liked>",
+                        "disliked_summary": "<natural language summary of what users disliked>"
+                        }
+                        `;
+
+        // const completion = await openai.chat.completions.create({
+        //     model: "gpt-3.5-turbo",
+        //     messages: [{ role: "user", content: prompt }],
+        //     // max_tokens: 300,
+        //     //  temperature: 0.7,
+        // });
+
+        // GPT cevabı al
+        // const responseText = completion.choices[0].message.content;
+
+        // console.log("GPT Cevabı sade hali:", responseText);
+
+        const mockResponse = {
+            "positive": 5,
+            "negative": 1,
+            "neutral": 1,
+            "neutral": 1,
+            "liked_summary": "Users liked the official release of the soundtrack, the nostalgic feelings it brought, and the quality of the episode.",
+            "disliked_summary": "One user expressed sadness over a character death in Star Wars, which was the only negative comment."
+        }
+
+        // JSON parse et
+        // let jsonResponse;
+        // try {
+        //     jsonResponse = JSON.parse(responseText);
+        // } catch {
+        //     return res.status(500).json({ error: "GPT cevabı JSON formatında değil", raw: responseText });
+        // }
+
+        // console.log("Token Kullanımı:", completion.usage);
+
+        // res.json(jsonResponse);
+        res.json(mockResponse);
+
+    } catch (error) {
+        console.error("API hatası:", error);
+        res.status(500).json({ error: "Sunucu hatası" });
+    }
+}
