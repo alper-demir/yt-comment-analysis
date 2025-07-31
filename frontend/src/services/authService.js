@@ -20,6 +20,25 @@ export const login = async (email, password) => {
     }
 }
 
+export const register = async (email, password) => {
+    try {
+        const response = await fetch(`${BACKEND_URL}/register`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                email,
+                password
+            })
+        })
+
+        return response;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 export const authNverification = async () => {
     try {
         const response = await fetch(`${BACKEND_URL}/verify-token`, {

@@ -20,7 +20,7 @@ export const register = async (req, res) => {
 
         const accountVerificationToken = await generateAccountVerificationToken(user.dataValues.id);
 
-        await sendRegisterEmail("alper.demir.fener22424@gmail.com", null, accountVerificationToken);
+        // await sendRegisterEmail("alper.demir.fener22424@gmail.com", null, accountVerificationToken);
 
         return res.status(201).json({ message: "User created successfully", user });
 
