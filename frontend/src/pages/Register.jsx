@@ -9,8 +9,31 @@ const Register = () => {
 
     const [loading, setLoading] = useState(false);
 
+    const mailRegex = (email) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    };
+
+    const passwordRegex = (password) => {
+        // Minimum 8 karakter, en az 1 harf ve 1 rakam içermeli
+        const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+        return passwordRegex.test(password);
+    };
+
     const handleRegister = async () => {
+
+        if (!mailRegex(email)) {
+            alert("Geçerli bir e-posta girin.");
+            return;
+        }
+
+        if (!passwordRegex(password)) {
+            alert("Şifre en az 8 karakter, en az 1 harf ve 1 rakam içermelidir.");
+            return;
+        }
+
         setLoading(true);
+
         const response = await register(email, password);
         const data = await response.json();
         if (response.ok) {
@@ -43,8 +66,17 @@ const Register = () => {
                     </div>
 
                     <div>
-                        <button type="button" onClick={handleRegister} className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" disabled={loading}>Register {loading && <LoadingSpinner />}</button>
+                        <button
+                            type="button"
+                            onClick={handleRegister}
+                            className={`flex w-full justify-center rounded-md px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 cursor-pointer disabled:cursor-not-allowed ${loading ? 'bg-indigo-400 opacity-80' : 'bg-indigo-600'}`}
+                            disabled={loading}
+                        >
+                            <span className="mr-2">Register</span>
+                            {loading && <LoadingSpinner color="blue" size="md" />}
+                        </button>
                     </div>
+
                 </form>
 
                 <p className="mt-10 text-center text-sm/6 text-gray-500">
