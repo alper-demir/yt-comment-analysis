@@ -7,11 +7,20 @@ export const generateToken = async (userId) => {
 }
 
 export const verifyToken = async (token) => {
-    return jwt.verify(token, process.env.JWT_SECRET, (error) => {
-        if (error) return { status: false, message: error.message };
-        return { status: true };
-    });
-}
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        return {
+            status: true,
+            payload: decoded // userId
+        };
+    } catch (error) {
+        return {
+            status: false,
+            message: error.message
+        };
+    }
+};
+
 
 export const generateAccountVerificationToken = async (userId) => {
     return jwt.sign({ userId }, process.env.JWT_SECRET, {
