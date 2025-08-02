@@ -49,7 +49,7 @@ export const analizeComments = async (req, res) => {
 
     try {
         const { comments } = req.body;
-
+        console.log("analize comment func: " + req.user.userId)
         if (!comments || !Array.isArray(comments)) {
             return res.status(400).json({ error: "comments bir dizi olmalı" });
         }
@@ -84,7 +84,7 @@ export const analizeComments = async (req, res) => {
         //     //  temperature: 0.7,
         // });
 
-        // GPT cevabı al
+        //GPT cevabı al
         // const responseText = completion.choices[0].message.content;
 
         // console.log("GPT Cevabı sade hali:", responseText);
@@ -108,7 +108,17 @@ export const analizeComments = async (req, res) => {
 
         // console.log("Token Kullanımı:", completion.usage);
 
-        // res.json(jsonResponse);
+        // const tokenUsage = completion.usage;
+        // const totalTokens = tokenUsage.total_tokens;
+        // const inputTokens = tokenUsage.prompt_tokens;
+        // const outputTokens = tokenUsage.completion_tokens;
+
+        // console.log("Toplam Token Sayısı:", tokenUsage);
+        // console.log("Toplam Token Sayısı:", totalTokens);
+        // console.log("Giriş Token Sayısı:", inputTokens);
+        // console.log("Çıkış Token Sayısı:", outputTokens);
+
+        //res.json(jsonResponse);
         res.json(mockResponse);
 
     } catch (error) {
