@@ -20,7 +20,7 @@ export const register = async (req, res) => {
 
         const accountVerificationToken = await generateAccountVerificationToken(user.dataValues.id);
 
-        // await sendRegisterEmail("alper.demir.fener22424@gmail.com", null, accountVerificationToken);
+        // await sendRegisterEmail("alper.demir@gmail.com", null, accountVerificationToken);
 
         return res.status(201).json({ message: "User created successfully", user });
 
@@ -31,8 +31,8 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
     const { email, password } = req.body;
-    console.log(email +" "+ password);
-    
+    console.log(email + " " + password);
+
     try {
 
         if (!email || !password) return res.status(400).json({ message: "Email and password are required" });
@@ -45,7 +45,7 @@ export const login = async (req, res) => {
         if (!decodedPassword) return res.status(400).json({ message: "Invalid password" });
 
         const token = await generateToken(user.dataValues.id);
-        return res.status(200).json({ message: "Login successful", token });
+        return res.status(200).json({ message: "Login successful", token, user });
 
     } catch (error) {
         return res.status(500).json({ message: error, error })
