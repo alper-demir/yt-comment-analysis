@@ -7,7 +7,7 @@ const router = express.Router();
 router.post("/register", register);
 router.post("/login", login);
 router.get("/verify-token", auth, (req, res) => {
-    return res.status(200).json({ message: "Test successful", authNverification: true })
+    return res.status(200).json({ message: "Test successful", authNverification: true, user: req.user })
 })
 
 export default router;

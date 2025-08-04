@@ -13,16 +13,20 @@ const router = createBrowserRouter([
         path: "",
         element: <ProtectedRoute />,
         children: [
-            { path: "", index: true, element: <Home /> }
+            { path: "inbox", element: <div>Inbox</div> },
+            { path: "calendar", element: <div>Calendar</div> },
+            { path: "settings", element: <div>Settings</div> },
         ]
     },
     {
         path: "",
         element: <PublicRoute />,
         children: [
-            { path: "/test", element: <div>test</div> }
+            { path: "/", element: <Home />, index: true },
+            { path: "/test", element: <div>Test</div> },
         ]
     }
-])
+]);
+
 
 export default router;

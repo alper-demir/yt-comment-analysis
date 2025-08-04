@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import { authNverification, login } from "../services/authService"
 import { Navigate, useNavigate } from 'react-router';
+import { useDispatch } from "react-redux";
+import { setUser } from "../redux/user";
 
 const Login = () => {
 
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -15,8 +18,9 @@ const Login = () => {
         const response = await login(email, password);
         const data = await response.json();
         if (response.ok) {
-            console.log(data);
+            dispatch(setUser(data.user));
             localStorage.setItem("token", data.token);
+            console.log(data);
             navigate("/");
         } else {
             // Notify user
