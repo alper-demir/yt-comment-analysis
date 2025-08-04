@@ -4,6 +4,7 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Toaster, toast } from "react-hot-toast";
 import LoadingSpinner from './../components/LoadingSpinner';
 
+
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const Home = () => {
@@ -89,7 +90,7 @@ const Home = () => {
     : null;
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+    <div className="bg-gray-100 flex items-center justify-center p-4">
       <div className="max-w-2xl w-full bg-white rounded-lg shadow-lg p-6 space-y-6">
         <h1 className="text-3xl font-bold text-center text-blue-600">
           YouTube Comment Analysis
