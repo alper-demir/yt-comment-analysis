@@ -1,7 +1,12 @@
 import { Outlet } from 'react-router'
+import MainLayout from '../layouts/MainLayout'
 
 const PublicRoute = () => {
-    return <Outlet />
+    return (
+        <MainLayout>
+            <Outlet />
+        </MainLayout>
+    )
 }
 
 export default PublicRoute

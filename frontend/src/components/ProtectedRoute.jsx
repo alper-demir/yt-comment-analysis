@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Navigate, Outlet } from "react-router";
 import { authNverification } from "../services/authService"
+import MainLayout from "../layouts/MainLayout";
 
 const token = localStorage.getItem("token");
 
@@ -23,7 +24,7 @@ const ProtectedRoute = () => {
     return <div>Loading...</div>;
   }
 
-  return isVerified ? <Outlet /> : <Navigate to="/login" replace />;
+  return isVerified ? (<MainLayout><Outlet /></MainLayout>) : <Navigate to="/login" replace />;
 };
 
 export default ProtectedRoute;
