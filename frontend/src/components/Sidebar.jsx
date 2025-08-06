@@ -10,9 +10,9 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import { useSelector } from "react-redux";
 
-// Menu items.
-const items = [
+const publicItems = [
     {
         title: "Home",
         url: "#",
@@ -32,7 +32,10 @@ const items = [
         title: "Search",
         url: "#",
         icon: Search,
-    },
+    }
+]
+
+const privateItems = [
     {
         title: "Settings",
         url: "#",
@@ -41,6 +44,13 @@ const items = [
 ]
 
 export function AppSidebar() {
+
+    let items = [];
+
+    const isAuthenticated = useSelector(state => state.user.isAuthenticated);
+    console.log("AppSidebar isAuthenticated:", isAuthenticated);
+    isAuthenticated ? items = [...publicItems, ...privateItems] : items = [...publicItems];
+
     return (
         <Sidebar>
             <SidebarContent>

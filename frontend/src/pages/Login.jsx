@@ -15,25 +15,30 @@ const Login = () => {
     const [loading, setLoading] = useState(true);
 
     const handleLogin = async () => {
-        const response = await login(email, password);
-        const data = await response.json();
-        if (response.ok) {
-            dispatch(setUser(data.user));
-            localStorage.setItem("token", data.token);
-            console.log(data);
-            navigate("/");
-        } else {
-            // Notify user
+        try {
+            const response = await login(email, password);
+            const data = await response.json();
+            if (response.ok) {
+                dispatch(setUser(data.user))
+                localStorage.setItem("token", data.token);
+                navigate("/")
+            } else {
+                console.error("Login failed:", data);
+            }
+        } catch (error) {
+            console.error("Login error:", error);
         }
-        console.log(response.ok);
-    }
+    };
 
     useEffect(() => {
         authNverification().then(data => {
             setLoading(false);
-            data.authNverification && navigate("/")
-        })
-    }, [])
+            if (data.authNverification) {
+                dispatch(setUser(data.user));
+                navigate("/");
+            }
+        });
+    }, []);
 
     if (loading) {
         return <div>Loading...</div>
