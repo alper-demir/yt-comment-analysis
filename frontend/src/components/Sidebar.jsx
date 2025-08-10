@@ -1,4 +1,4 @@
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react"
+import { Calendar, Home, Inbox, Search, Settings, History, ChevronUp } from "lucide-react"
 
 import {
     Sidebar,
@@ -9,23 +9,26 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
+    SidebarFooter
 } from "@/components/ui/sidebar"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
+
 import { useSelector } from "react-redux";
 
 const publicItems = [
     {
         title: "Home",
-        url: "#",
+        url: "/",
         icon: Home,
     },
     {
         title: "Inbox",
-        url: "#",
+        url: "/inbox",
         icon: Inbox,
     },
     {
         title: "Calendar",
-        url: "#",
+        url: "/calendar",
         icon: Calendar,
     },
     {
@@ -37,10 +40,10 @@ const publicItems = [
 
 const privateItems = [
     {
-        title: "Settings",
-        url: "#",
-        icon: Settings,
-    },
+        title: "History",
+        url: "/history",
+        icon: History,
+    }
 ]
 
 export function AppSidebar() {
@@ -55,7 +58,7 @@ export function AppSidebar() {
         <Sidebar>
             <SidebarContent>
                 <SidebarGroup>
-                    <SidebarGroupLabel>Application</SidebarGroupLabel>
+                    <SidebarGroupLabel>YouTube Comment Analysis</SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu>
                             {items.map((item) => (
@@ -72,6 +75,43 @@ export function AppSidebar() {
                     </SidebarGroupContent>
                 </SidebarGroup>
             </SidebarContent>
+
+            {/* footer */}
+            {
+                isAuthenticated && (
+                    <SidebarFooter>
+                        <SidebarMenu>
+                            <SidebarMenuItem>
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <SidebarMenuButton>
+                                            Username
+                                            <ChevronUp className="ml-auto" />
+                                        </SidebarMenuButton>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent
+                                        side="top"
+                                        className="w-[--radix-popper-anchor-width]"
+                                    >
+                                        <DropdownMenuItem>
+                                            <span>Account</span>
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem>
+                                            <span>Billing</span>
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem>
+                                            <span>Settings</span>
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem>
+                                            <span>Sign out</span>
+                                        </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            </SidebarMenuItem>
+                        </SidebarMenu>
+                    </SidebarFooter>
+                )
+            }
         </Sidebar>
     )
 }
