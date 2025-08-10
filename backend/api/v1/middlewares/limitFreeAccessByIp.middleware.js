@@ -8,7 +8,7 @@ export const limitFreeAccessByIp = async (req, res, next) => {
     const { userId } = req.user;
     try {
 
-        if (userId) { // later
+        if (userId !== null) { // later
             const user = await User.findByPk(userId);
             return next();
             // if (user?.isSubscribed || user?.tokenCount > 0) {
