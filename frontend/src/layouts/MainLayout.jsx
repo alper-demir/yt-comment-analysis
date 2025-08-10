@@ -32,9 +32,8 @@ const MainLayout = () => {
         <SidebarProvider>
             <AppSidebar />
             <SidebarTrigger />
-            <main className='mx-auto max-w-5xl mt-20'>
+            <main className='mx-auto max-w-5xl my-20'>
                 <Outlet />
-                {user?.user ? JSON.stringify(user) : <>no user auth</>}
             </main>
         </SidebarProvider>
     );
