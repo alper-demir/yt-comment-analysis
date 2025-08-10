@@ -7,6 +7,6 @@ import { analysisAuth } from "../middlewares/analysisAuth.middleware.js";
 const router = express.Router();
 
 router.get("/yt-video/:id", analysisAuth, limitFreeAccessByIp, getComments);
-router.post("/analyze-comments", auth, analizeComments);
+router.post("/analyze-comments", analysisAuth, analizeComments);
 
 export default router;
