@@ -1,4 +1,5 @@
 import OpenAI from "openai";
+import Analize from "../models/analize.model.js";
 
 const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
 const BACKEND_URL = process.env.BACKEND_URL;
@@ -46,6 +47,9 @@ export const getComments = async (req, res) => {
 }
 
 export const analizeComments = async (req, res) => {
+    const clientIp = req.clientIp;
+    const { userId } = req.user;
+    console.log(clientIp);
 
     try {
         const { comments } = req.body;
@@ -93,7 +97,6 @@ export const analizeComments = async (req, res) => {
             "positive": 5,
             "negative": 1,
             "neutral": 1,
-            "neutral": 1,
             "liked_summary": "Users liked the official release of the soundtrack, the nostalgic feelings it brought, and the quality of the episode.",
             "disliked_summary": "One user expressed sadness over a character death in Star Wars, which was the only negative comment."
         }
@@ -117,6 +120,25 @@ export const analizeComments = async (req, res) => {
         // console.log("Toplam Token Sayısı:", totalTokens);
         // console.log("Giriş Token Sayısı:", inputTokens);
         // console.log("Çıkış Token Sayısı:", outputTokens);
+
+        // Create analysis record
+
+        const analize = await Analize.create({
+            ip: clientIp,
+            userId: userId ? userId : null,
+            positive_comment_count: mockResponse.positive,
+            negative_comment_count: mockResponse.negative,
+            neutral_comment_count: mockResponse.neutral,
+            total_comment_count: comments.length,
+            positive_comment_summary: mockResponse.liked_summary,
+            negative_comment_summary: mockResponse.disliked_summary,
+            input_token: 0,
+            output_token: 0,
+            total_token: 0
+        })
+
+        console.log("Analize record : " + analize);
+
 
         //res.json(jsonResponse);
         res.json(mockResponse);
