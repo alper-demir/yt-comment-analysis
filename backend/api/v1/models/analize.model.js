@@ -28,10 +28,10 @@ const Analize = sequelize.define("Analize", {
         type: DataTypes.INTEGER,
     },
     positive_comment_summary: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
     },
     negative_comment_summary: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
     },
     input_token: {
         type: DataTypes.INTEGER,
