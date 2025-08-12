@@ -24,7 +24,7 @@ export const getComments = async (req, res) => {
     //     console.log(data);
     //     return res.status(data.error.code).json({ error: data.error.message });
     // }
-
+    //if (data.items.length === 0) return res.status(400).json({ message: "No comments found", status: false });
 
     // const comments = data.items.map((item) => item.snippet.topLevelComment.snippet.textDisplay);
     // console.log("Filtrelenmiş Yorumlar:" + comments);
