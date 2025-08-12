@@ -52,3 +52,14 @@ export const authNverification = async () => {
         console.log(error);
     }
 };
+
+export const verifyAccount = async (userId) => {
+    try {
+        const response = await fetch(`${BACKEND_URL}/verify-account/${userId}`, {
+            method: "GET"
+        });
+        return response;
+    } catch (error) {
+        console.log(error);
+    }
+}
