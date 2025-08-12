@@ -12,6 +12,7 @@ const Home = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [analysis, setAnalysis] = useState(null);
+  const [isImageLoading, setIsImageLoading] = useState(true);
 
   const YOUTUBE_ID_LENGTH = 11;
   const token = localStorage.getItem("token");
@@ -98,7 +99,7 @@ const Home = () => {
 
   return (
     <div className="flex items-center justify-center p-4">
-      <div className="max-w-2xl w-full bg-white rounded-lg shadow-lg p-6 space-y-6">
+      <div className="bg-white rounded-lg shadow-lg p-6 space-y-6">
         <h1 className="text-3xl font-bold text-center text-blue-600">
           YouTube Comment Analysis
         </h1>
@@ -147,6 +148,45 @@ const Home = () => {
         {isLoading && (
           <LoadingSpinner size="md" />
         )}
+
+        {
+          url && (() => {
+            const videoId = extractVideoId(url);
+            if (!videoId) return null;
+
+
+            return (
+              <div className="mt-6 flex flex-col items-center gap-3">
+                {/* Görsel alanı */}
+                <div className="relative w-full max-w-lg flex justify-center items-center">
+                  {isImageLoading && (
+                    <div className="absolute">
+                      <LoadingSpinner size="md" />
+                    </div>
+                  )}
+                  <img
+                    src={`https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`}
+                    alt="YouTube Thumbnail"
+                    className={`rounded-xl shadow-md w-full object-cover transition-opacity duration-300 ${isImageLoading ? "opacity-0" : "opacity-100"
+                      }`}
+                    onLoad={() => setIsImageLoading(false)}
+                  />
+                </div>
+
+                {/* Video linki */}
+                <a
+                  href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-gray-500 hover:text-blue-600 transition"
+                >
+                  {url}
+                </a>
+              </div>
+            );
+          })()
+        }
+
 
         {/* Analize Results */}
         {analysis && (
