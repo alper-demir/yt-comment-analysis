@@ -2,11 +2,16 @@ import User from "../models/user.model.js"
 import bcrypt from "bcrypt"
 import { generateAccountVerificationToken, generateToken } from "../utils/jwt.util.js"
 import { sendRegisterEmail } from "../utils/email.util.js";
+import UserPreference from "../models/userPrefences.model.js";
 
 export const register = async (req, res) => {
-    const { email, password } = req.body;
-    try {
 
+    const defaultLanguage = "en-US";
+
+    const { email, password } = req.body;
+    const acceptLanguage = req.headers['accept-language'];
+    const language = acceptLanguage ? acceptLanguage.split(',')[0] : defaultLanguage;
+    try {
         if (!email || !password) return res.status(400).json({ message: "Email and password are required" });
 
         const exsist = await User.findOne({ where: { email } });
@@ -18,9 +23,11 @@ export const register = async (req, res) => {
 
         const user = await User.create({ email, password: hashedPassword });
 
-        const accountVerificationToken = await generateAccountVerificationToken(user.dataValues.id);
+        await UserPreference.create({ userId: user.id, language });
 
-        await sendRegisterEmail(email, null, accountVerificationToken);
+        // const accountVerificationToken = await generateAccountVerificationToken(user.dataValues.id);
+
+        //await sendRegisterEmail(email, null, accountVerificationToken);
 
         return res.status(201).json({ message: "User created successfully", user });
 
@@ -43,6 +50,8 @@ export const login = async (req, res) => {
 
         const decodedPassword = await bcrypt.compare(password, user.password);
         if (!decodedPassword) return res.status(400).json({ message: "Invalid password" });
+
+        // if (!user.verified) return res.status(400).json({ message: "Please verify your account" });
 
         const token = await generateToken(user.dataValues.id);
         return res.status(200).json({ message: "Login successful", token, user });
