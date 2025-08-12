@@ -1,16 +1,11 @@
 import { DataTypes } from "sequelize";
-import { sequelize } from "../config/db.config.js";
+import sequelize from "../config/db.config.js";
 
 const UserPreference = sequelize.define("UserPreference", {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
-    },
-    userId: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        unique: true,
     },
     theme: {
         type: DataTypes.ENUM("light", "dark"),

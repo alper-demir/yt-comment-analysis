@@ -11,10 +11,6 @@ const Analize = sequelize.define("Analize", {
         type: DataTypes.STRING,
         allowNull: true,
     },
-    userId: {
-        type: DataTypes.UUID,
-        allowNull: true
-    },
     positive_comment_count: {
         type: DataTypes.INTEGER,
     },
