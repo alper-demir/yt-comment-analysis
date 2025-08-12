@@ -33,9 +33,7 @@ const Home = () => {
     if (!videoId) {
       setIsValidUrl(false);
       setError("Please provide a valid YouTube video link");
-      toast.error("Please provide a valid YouTube video link", {
-        position: "top-right",
-      });
+      toast.error("Please provide a valid YouTube video link");
       return;
     }
 
@@ -54,14 +52,10 @@ const Home = () => {
       if (!response.ok) throw new Error(data.message);
 
       setAnalysis(data);
-      toast.success("Analize completed!", {
-        position: "top-right",
-      });
+      toast.success("Analize completed!");
     } catch (err) {
       setError(err.message);
-      toast.error(err.message, {
-        position: "top-right",
-      });
+      toast.error(err.message);
     } finally {
       setIsLoading(false);
     }
@@ -265,7 +259,6 @@ const Home = () => {
         )}
 
       </div>
-      <Toaster />
     </div>
   );
 
