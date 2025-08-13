@@ -14,6 +14,7 @@ import {
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
 
 import { useSelector } from "react-redux";
+import { Link } from "react-router";
 
 const publicItems = [
     {
@@ -46,6 +47,25 @@ const privateItems = [
     }
 ]
 
+const dropdownItems = [
+    {
+        title: "Account",
+        url: "/account",
+    },
+    {
+        title: "Billing",
+        url: "/billing",
+    },
+    {
+        title: "Settings",
+        url: "/settings",
+    },
+    {
+        title: "Signout",
+        url: "/signout",
+    }
+]
+
 export function AppSidebar() {
 
     let items = [];
@@ -64,10 +84,10 @@ export function AppSidebar() {
                             {items.map((item) => (
                                 <SidebarMenuItem key={item.title}>
                                     <SidebarMenuButton asChild>
-                                        <a href={item.url}>
+                                        <Link to={item.url}>
                                             <item.icon />
                                             <span>{item.title}</span>
-                                        </a>
+                                        </Link>
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
                             ))}
@@ -93,18 +113,13 @@ export function AppSidebar() {
                                         side="top"
                                         className="w-[--radix-popper-anchor-width]"
                                     >
-                                        <DropdownMenuItem>
-                                            <span>Account</span>
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem>
-                                            <span>Billing</span>
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem>
-                                            <span>Settings</span>
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem>
-                                            <span>Sign out</span>
-                                        </DropdownMenuItem>
+                                        {
+                                            dropdownItems.map((item, index) => (
+                                                <DropdownMenuItem key={index}>
+                                                    {item.url ? (<Link to={item.url}>{item.title}</Link>) : (<span>{item.title}</span>)}
+                                                </DropdownMenuItem>
+                                            ))
+                                        }
                                     </DropdownMenuContent>
                                 </DropdownMenu>
                             </SidebarMenuItem>
