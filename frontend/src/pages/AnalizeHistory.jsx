@@ -24,9 +24,6 @@ const AnalizeHistory = () => {
 
     const [searchParams, setSearchParams] = useSearchParams();
 
-
-    console.log(searchParams.get("page"));
-
     const analizes = async () => {
         const response = await getAnalyzes(page, limit);
         const data = await response.json();
@@ -45,6 +42,8 @@ const AnalizeHistory = () => {
     useEffect(() => {
         analizes();
     }, [page]);
+
+    const totalPages = Math.ceil(totalRecord / limit);
 
     return (
         <Table>
@@ -106,28 +105,30 @@ const AnalizeHistory = () => {
                     <TableCell colSpan={7}>
                         <Pagination>
                             <PaginationContent>
+                                {/* Previous */}
                                 <PaginationItem>
                                     <PaginationPrevious
                                         href={`?page=${page - 1}`}
+                                        aria-disabled={page <= 1}
+                                        className={page <= 1 ? "pointer-events-none opacity-50" : ""}
                                         onClick={(e) => {
                                             e.preventDefault();
                                             if (page > 1) {
-                                                const newPage = page - 1;
-                                                setSearchParams({ page: newPage });
+                                                setSearchParams({ page: page - 1 });
                                             }
                                         }}
                                     />
                                 </PaginationItem>
 
-                                {Array.from({ length: Math.ceil(totalRecord / limit) }).map((_, i) => (
+                                {/* Sayfa Numaraları */}
+                                {Array.from({ length: totalPages }).map((_, i) => (
                                     <PaginationItem key={i}>
                                         <PaginationLink
                                             href={`?page=${i + 1}`}
                                             isActive={page === i + 1}
                                             onClick={(e) => {
                                                 e.preventDefault();
-                                                const newPage = i + 1;
-                                                setSearchParams({ page: newPage });
+                                                setSearchParams({ page: i + 1 });
                                             }}
                                         >
                                             {i + 1}
@@ -135,14 +136,16 @@ const AnalizeHistory = () => {
                                     </PaginationItem>
                                 ))}
 
+                                {/* Next */}
                                 <PaginationItem>
                                     <PaginationNext
                                         href={`?page=${page + 1}`}
+                                        aria-disabled={page >= totalPages}
+                                        className={page >= totalPages ? "pointer-events-none opacity-50" : ""}
                                         onClick={(e) => {
                                             e.preventDefault();
-                                            if (page < Math.ceil(totalRecord / limit)) {
-                                                const newPage = parseInt(page) + 1;
-                                                setSearchParams({ page: newPage });
+                                            if (page < totalPages) {
+                                                setSearchParams({ page: page + 1 });
                                             }
                                         }}
                                     />
