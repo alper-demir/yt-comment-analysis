@@ -32,7 +32,7 @@ const MainLayout = () => {
         <SidebarProvider>
             <AppSidebar />
             <SidebarTrigger />
-            <main className='mx-auto max-w-5xl my-20'>
+            <main className='mx-auto w-full max-w-5xl my-20'>
                 <Outlet />
             </main>
         </SidebarProvider>

@@ -5,6 +5,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Home from "./pages/Home";
 import PublicRoute from "./components/PublicRoute";
 import VerifyAccount from "./pages/VerifyAccount";
+import AnalizeHistory from "./pages/AnalizeHistory";
 
 const router = createBrowserRouter([
     { path: "login", element: <Login /> },
@@ -17,6 +18,7 @@ const router = createBrowserRouter([
             { path: "inbox", element: <div>Inbox</div> },
             { path: "calendar", element: <div>Calendar</div> },
             { path: "settings", element: <div>Settings</div> },
+            { path: "history", element: <AnalizeHistory /> },
         ]
     },
     {

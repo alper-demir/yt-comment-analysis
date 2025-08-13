@@ -37,8 +37,8 @@ export const getComments = async (req, res) => {
             "Content-Type": "application/json",
             "Authorization": req.headers.authorization
         },
-        // body: JSON.stringify({ comments }),
-        body: JSON.stringify({ comments: mockComments })
+        // body: JSON.stringify({ comments,videoId: id }),
+        body: JSON.stringify({ comments: mockComments, videoId: id })
     })
 
     const anaylzedData = await resp.json();
@@ -49,6 +49,7 @@ export const getComments = async (req, res) => {
 export const analizeComments = async (req, res) => {
     const clientIp = req.clientIp;
     const { userId } = req.user;
+    const { videoId } = req.body;
     console.log(clientIp);
 
     try {
@@ -134,7 +135,8 @@ export const analizeComments = async (req, res) => {
             negative_comment_summary: mockResponse.disliked_summary,
             input_token: 0,
             output_token: 0,
-            total_token: 0
+            total_token: 0,
+            videoId
         })
 
         console.log("Analize record : " + analize);
@@ -146,5 +148,28 @@ export const analizeComments = async (req, res) => {
     } catch (error) {
         console.error("API hatası:", error);
         res.status(500).json({ error: "Sunucu hatası" });
+    }
+}
+
+export const getAnalizes = async (req, res) => {
+    const { userId } = req.user;
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const offset = (page - 1) * limit;
+
+    try {
+
+        const analizes = await Analize.findAndCountAll({
+            where: { userId },
+            offset,
+            limit,
+            order: [['createdAt', 'DESC']]
+        });
+
+        res.json(analizes);
+
+    } catch (error) {
+        return res.status(500).json({ message: error, error })
     }
 }

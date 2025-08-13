@@ -37,6 +37,10 @@ const Analize = sequelize.define("Analize", {
     },
     total_token: {
         type: DataTypes.INTEGER,
+    },
+    videoId: {
+        type: DataTypes.STRING,
+        allowNull: false,
     }
 })
 
