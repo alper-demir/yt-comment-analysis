@@ -1,4 +1,17 @@
-import { Calendar, Home, Inbox, Search, Settings, History, ChevronUp } from "lucide-react"
+import {
+    Home,
+    Search,
+    DollarSign,
+    Mail,
+    LogIn,
+    LayoutDashboard,
+    PlusCircle,
+    History,
+    BarChart,
+    FileText,
+    Key,
+    ChevronUp
+} from "lucide-react";
 
 import {
     Sidebar,
@@ -10,69 +23,49 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
     SidebarFooter
-} from "@/components/ui/sidebar"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
+} from "@/components/ui/sidebar";
+
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger
+} from "./ui/dropdown-menu";
 
 import { useSelector } from "react-redux";
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 
 const publicItems = [
-    {
-        title: "Home",
-        url: "/",
-        icon: Home,
-    },
-    {
-        title: "Inbox",
-        url: "/inbox",
-        icon: Inbox,
-    },
-    {
-        title: "Calendar",
-        url: "/calendar",
-        icon: Calendar,
-    },
-    {
-        title: "Search",
-        url: "#",
-        icon: Search,
-    }
-]
+    { title: "Home", url: "/", icon: Home },
+    { title: "Features", url: "/features", icon: Search },
+    { title: "Pricing", url: "/pricing", icon: DollarSign },
+    { title: "Contact", url: "/contact", icon: Mail },
+    { title: "Login", url: "/login", icon: LogIn }
+];
 
 const privateItems = [
-    {
-        title: "History",
-        url: "/history",
-        icon: History,
-    }
-]
+    { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
+    { title: "New Analysis", url: "/analysis/new", icon: PlusCircle },
+    { title: "History", url: "/history", icon: History },
+    { title: "Statistics", url: "/statistics", icon: BarChart },
+    { title: "Saved Reports", url: "/reports", icon: FileText },
+    { title: "API Access", url: "/api-access", icon: Key }
+];
 
 const dropdownItems = [
-    {
-        title: "Account",
-        url: "/account",
-    },
-    {
-        title: "Billing",
-        url: "/billing",
-    },
-    {
-        title: "Settings",
-        url: "/settings",
-    },
-    {
-        title: "Signout",
-        url: "/signout",
-    }
-]
+    { title: "Account", url: "/account" },
+    { title: "Billing", url: "/billing" },
+    { title: "Settings", url: "/settings" },
+    { title: "Signout", url: "/signout" }
+];
 
 export function AppSidebar() {
+    const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+    const location = useLocation();
 
-    let items = [];
-
-    const isAuthenticated = useSelector(state => state.user.isAuthenticated);
-    console.log("AppSidebar isAuthenticated:", isAuthenticated);
-    isAuthenticated ? items = [...publicItems, ...privateItems] : items = [...publicItems];
+    const items = isAuthenticated
+        ? [...privateItems]
+        : [...publicItems];
 
     return (
         <Sidebar>
@@ -81,52 +74,61 @@ export function AppSidebar() {
                     <SidebarGroupLabel>YouTube Comment Analysis</SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu>
-                            {items.map((item) => (
-                                <SidebarMenuItem key={item.title}>
-                                    <SidebarMenuButton asChild>
-                                        <Link to={item.url}>
-                                            <item.icon />
-                                            <span>{item.title}</span>
-                                        </Link>
-                                    </SidebarMenuButton>
-                                </SidebarMenuItem>
-                            ))}
+                            {items.map((item) => {
+                                const isActive = location.pathname === item.url;
+                                return (
+                                    <SidebarMenuItem key={item.title}>
+                                        <SidebarMenuButton asChild>
+                                            <Link
+                                                to={item.url}
+                                                className={
+                                                    isActive
+                                                        ? "bg-accent text-accent-foreground font-medium rounded-md"
+                                                        : ""
+                                                }
+                                            >
+                                                <item.icon />
+                                                <span>{item.title}</span>
+                                            </Link>
+                                        </SidebarMenuButton>
+                                    </SidebarMenuItem>
+                                );
+                            })}
                         </SidebarMenu>
                     </SidebarGroupContent>
                 </SidebarGroup>
             </SidebarContent>
 
-            {/* footer */}
-            {
-                isAuthenticated && (
-                    <SidebarFooter>
-                        <SidebarMenu>
-                            <SidebarMenuItem>
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <SidebarMenuButton>
-                                            Username
-                                            <ChevronUp className="ml-auto" />
-                                        </SidebarMenuButton>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent
-                                        side="top"
-                                        className="w-[--radix-popper-anchor-width]"
-                                    >
-                                        {
-                                            dropdownItems.map((item, index) => (
-                                                <DropdownMenuItem key={index}>
-                                                    {item.url ? (<Link to={item.url}>{item.title}</Link>) : (<span>{item.title}</span>)}
-                                                </DropdownMenuItem>
-                                            ))
-                                        }
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                            </SidebarMenuItem>
-                        </SidebarMenu>
-                    </SidebarFooter>
-                )
-            }
+            {isAuthenticated && (
+                <SidebarFooter>
+                    <SidebarMenu>
+                        <SidebarMenuItem>
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <SidebarMenuButton>
+                                        Username
+                                        <ChevronUp className="ml-auto" />
+                                    </SidebarMenuButton>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent
+                                    side="top"
+                                    className="w-[--radix-popper-anchor-width]"
+                                >
+                                    {dropdownItems.map((item, index) => (
+                                        <DropdownMenuItem key={index}>
+                                            {item.url ? (
+                                                <Link to={item.url}>{item.title}</Link>
+                                            ) : (
+                                                <span>{item.title}</span>
+                                            )}
+                                        </DropdownMenuItem>
+                                    ))}
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        </SidebarMenuItem>
+                    </SidebarMenu>
+                </SidebarFooter>
+            )}
         </Sidebar>
-    )
+    );
 }
