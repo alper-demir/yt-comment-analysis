@@ -53,7 +53,7 @@ export const login = async (req, res) => {
 
         // if (!user.verified) return res.status(400).json({ message: "Please verify your account" });
 
-        const token = await generateToken(user.dataValues.id);
+        const token = await generateToken({ userId: user.dataValues.id, email });
         return res.status(200).json({ message: "Login successful", token, user });
 
     } catch (error) {

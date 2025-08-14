@@ -6,6 +6,7 @@ import Home from "./pages/Home";
 import PublicRoute from "./components/PublicRoute";
 import VerifyAccount from "./pages/VerifyAccount";
 import AnalizeHistory from "./pages/AnalizeHistory";
+import Settings from "./pages/Settings";
 
 const router = createBrowserRouter([
     { path: "login", element: <Login /> },
@@ -17,7 +18,7 @@ const router = createBrowserRouter([
         children: [
             { path: "inbox", element: <div>Inbox</div> },
             { path: "calendar", element: <div>Calendar</div> },
-            { path: "settings", element: <div>Settings</div> },
+            { path: "settings", element: <Settings /> },
             { path: "history", element: <AnalizeHistory /> },
         ]
     },

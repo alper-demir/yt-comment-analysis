@@ -13,6 +13,7 @@ const ProtectedRoute = () => {
     if (token) {
       authNverification().then((data) => {
         setIsVerified(data?.authNverification || false);
+        console.log(data)
         setLoading(false);
       });
     } else {

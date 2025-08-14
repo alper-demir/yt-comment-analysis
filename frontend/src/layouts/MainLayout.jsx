@@ -31,7 +31,7 @@ const MainLayout = () => {
     return (
         <SidebarProvider>
             <AppSidebar />
-            <SidebarTrigger />
+            <SidebarTrigger className="m-2 cursor-pointer" />
             <main className='mx-auto w-full max-w-5xl my-20'>
                 <Outlet />
             </main>

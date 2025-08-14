@@ -61,6 +61,7 @@ const dropdownItems = [
 
 export function AppSidebar() {
     const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
+    const { email } = useSelector((state) => state.user.user || "");
     const location = useLocation();
 
     const items = isAuthenticated
@@ -68,7 +69,7 @@ export function AppSidebar() {
         : [...publicItems];
 
     return (
-        <Sidebar>
+        <Sidebar collapsible="icon">
             <SidebarContent>
                 <SidebarGroup>
                     <SidebarGroupLabel>YouTube Comment Analysis</SidebarGroupLabel>
@@ -106,7 +107,7 @@ export function AppSidebar() {
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
                                     <SidebarMenuButton>
-                                        Username
+                                        {email && email}
                                         <ChevronUp className="ml-auto" />
                                     </SidebarMenuButton>
                                 </DropdownMenuTrigger>
