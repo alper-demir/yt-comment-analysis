@@ -98,12 +98,12 @@ const Home = () => {
 
   return (
     <div className="flex items-center justify-center p-6">
-      <Card className="w-full max-w-3xl shadow-lg border border-gray-200">
+      <Card className="w-full max-w-3xl shadow-lg border">
         <CardHeader className="space-y-2">
-          <CardTitle className="text-3xl font-bold text-center text-blue-600">
+          <CardTitle className="text-2xl font-bold text-center">
             YouTube Comment Analysis
           </CardTitle>
-          <CardDescription className="text-center text-gray-600">
+          <CardDescription className="text-center">
             Provide a YouTube video link and we'll analyze the comments!
           </CardDescription>
         </CardHeader>
@@ -128,20 +128,15 @@ const Home = () => {
               <Button
                 onClick={handleSubmit}
                 disabled={isLoading}
-                className="min-w-[120px]"
+                className="min-w-[120px] cursor-pointer"
               >
                 {isLoading ? "Analyzing..." : "Analyze"}
               </Button>
             </div>
             {!isValidUrl && (
-              <p className="text-sm text-red-500">Enter a valid YouTube link.</p>
+              <p className="text-sm text-red-500">{error}</p>
             )}
           </div>
-
-          {/* Error */}
-          {error && (
-            <p className="text-center text-red-500 font-medium">{error}</p>
-          )}
 
           {/* Loading */}
           {isLoading && <LoadingSpinner size="md" />}
@@ -171,7 +166,7 @@ const Home = () => {
                   href={url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm text-gray-500 hover:text-blue-600 transition"
+                  className="text-sm hover:text-blue-600 transition"
                 >
                   {url}
                 </a>
@@ -183,17 +178,17 @@ const Home = () => {
           {analysis && (
             <div className="space-y-6">
               <Separator />
-              <h2 className="text-xl font-semibold text-gray-800">Analysis Results</h2>
+              <h2 className="text-xl font-semibold">Analysis Results</h2>
 
               {/* Toplam yorum */}
-              <p className="text-gray-600">
+              <p>
                 Total Comments Analyzed:{" "}
                 <span className="font-semibold">{totalComments}</span>
               </p>
 
               {/* Pie Chart */}
               <div className="max-w-xs mx-auto">
-                <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                <h3 className="text-lg font-semibold mb-2">
                   Sentiment Distribution
                 </h3>
                 {chartData && (
@@ -221,33 +216,35 @@ const Home = () => {
 
               {/* Stats Cards */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="p-4 bg-blue-100 rounded-md text-center">
-                  <p className="font-medium text-blue-800">Positive</p>
+                <Card className="text-center p-4">
+                  <p className="font-medium">Positive</p>
                   <p className="text-2xl font-bold">{analysis.positive || 0}</p>
-                  <p className="text-sm text-blue-700">{percentages.positive}%</p>
-                </div>
-                <div className="p-4 bg-red-100 rounded-md text-center">
-                  <p className="font-medium text-red-800">Negative</p>
+                  <p className="text-sm">{percentages.positive}%</p>
+                </Card>
+
+                <Card className="text-center p-4">
+                  <p className="font-medium">Negative</p>
                   <p className="text-2xl font-bold">{analysis.negative || 0}</p>
-                  <p className="text-sm text-red-700">{percentages.negative}%</p>
-                </div>
-                <div className="p-4 bg-yellow-100 rounded-md text-center">
-                  <p className="font-medium text-yellow-800">Neutral</p>
+                  <p className="text-sm">{percentages.negative}%</p>
+                </Card>
+
+                <Card className="text-center p-4">
+                  <p className="font-medium">Neutral</p>
                   <p className="text-2xl font-bold">{analysis.neutral || 0}</p>
-                  <p className="text-sm text-yellow-700">{percentages.neutral}%</p>
-                </div>
+                  <p className="text-sm">{percentages.neutral}%</p>
+                </Card>
               </div>
 
               {/* Summaries */}
               <div className="space-y-2">
-                <p className="font-medium text-gray-700">Liked Summary:</p>
-                <p className="text-gray-600">
+                <p className="font-medium">Liked Summary:</p>
+                <p>
                   {analysis.liked_summary || "No Data"}
                 </p>
               </div>
               <div className="space-y-2">
-                <p className="font-medium text-gray-700">Disliked Summary:</p>
-                <p className="text-gray-600">
+                <p className="font-medium">Disliked Summary:</p>
+                <p>
                   {analysis.disliked_summary || "No Data"}
                 </p>
               </div>

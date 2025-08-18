@@ -7,27 +7,34 @@ import PublicRoute from "./components/PublicRoute";
 import VerifyAccount from "./pages/VerifyAccount";
 import AnalizeHistory from "./pages/AnalizeHistory";
 import Settings from "./pages/Settings";
+import BaseLayout from "./layouts/BaseLayout";
 
 const router = createBrowserRouter([
-    { path: "login", element: <Login /> },
-    { path: "register", element: <Register /> },
-    { path: "/verify-account/:token", element: <VerifyAccount /> },
     {
         path: "",
-        element: <ProtectedRoute />,
+        element: <BaseLayout />,
         children: [
-            { path: "inbox", element: <div>Inbox</div> },
-            { path: "calendar", element: <div>Calendar</div> },
-            { path: "settings", element: <Settings /> },
-            { path: "history", element: <AnalizeHistory /> },
-        ]
-    },
-    {
-        path: "",
-        element: <PublicRoute />,
-        children: [
-            { path: "/", element: <Home />, index: true },
-            { path: "/test", element: <div>Test</div> },
+            { path: "login", element: <Login /> },
+            { path: "register", element: <Register /> },
+            { path: "/verify-account/:token", element: <VerifyAccount /> },
+            {
+                path: "",
+                element: <ProtectedRoute />,
+                children: [
+                    { path: "inbox", element: <div>Inbox</div> },
+                    { path: "calendar", element: <div>Calendar</div> },
+                    { path: "settings", element: <Settings /> },
+                    { path: "history", element: <AnalizeHistory /> },
+                ]
+            },
+            {
+                path: "",
+                element: <PublicRoute />,
+                children: [
+                    { path: "/", element: <Home />, index: true },
+                    { path: "/test", element: <div>Test</div> },
+                ]
+            }
         ]
     }
 ]);

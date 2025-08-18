@@ -10,7 +10,8 @@ import {
     BarChart,
     FileText,
     Key,
-    ChevronUp
+    ChevronUp,
+    Circle
 } from "lucide-react";
 
 import {
@@ -45,7 +46,7 @@ const publicItems = [
 
 const privateItems = [
     { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
-    { title: "New Analysis", url: "/analysis/new", icon: PlusCircle },
+    { title: "New Analysis", url: "/", icon: PlusCircle },
     { title: "History", url: "/history", icon: History },
     { title: "Statistics", url: "/statistics", icon: BarChart },
     { title: "Saved Reports", url: "/reports", icon: FileText },
@@ -107,7 +108,7 @@ export function AppSidebar() {
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
                                     <SidebarMenuButton>
-                                        {email && email}
+                                        <Circle />{email && email}
                                         <ChevronUp className="ml-auto" />
                                     </SidebarMenuButton>
                                 </DropdownMenuTrigger>

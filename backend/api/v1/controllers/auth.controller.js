@@ -44,7 +44,7 @@ export const login = async (req, res) => {
 
         if (!email || !password) return res.status(400).json({ message: "Email and password are required" });
 
-        const user = await User.findOne({ where: { email } });
+        const user = await User.findOne({ where: { email }, include: { model: UserPreference, attributes: ['language', 'theme'] } });
 
         if (!user) return res.status(400).json({ message: "User not found" });
 
@@ -53,7 +53,7 @@ export const login = async (req, res) => {
 
         // if (!user.verified) return res.status(400).json({ message: "Please verify your account" });
 
-        const token = await generateToken({ userId: user.dataValues.id, email });
+        const token = await generateToken({ userId: user.dataValues.id, email, theme: user.dataValues.UserPreference.theme, language: user.dataValues.UserPreference.language });
         return res.status(200).json({ message: "Login successful", token, user });
 
     } catch (error) {
