@@ -8,7 +8,7 @@ const ErrorPage = () => {
     const navigate = useNavigate();
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4">
+        <div className="min-h-screen flex items-center justify-center px-4">
             <Card className="max-w-md w-full shadow-lg rounded-2xl text-center">
                 <CardHeader>
                     <CardTitle className="flex items-center justify-center gap-2 text-2xl sm:text-3xl font-bold">
@@ -17,10 +17,10 @@ const ErrorPage = () => {
                 </CardHeader>
                 <Separator />
                 <CardContent className="space-y-4">
-                    <p className="text-gray-700 dark:text-gray-300 text-sm sm:text-base">
+                    <p className="text-sm sm:text-base">
                         The page you are looking for does not exist, or an unexpected error occurred.
                     </p>
-                    <p className="text-gray-500 dark:text-gray-400 text-sm sm:text-base">
+                    <p className="text-sm sm:text-base">
                         You can return to the homepage or check your URL.
                     </p>
                     <div className="flex justify-center gap-4 mt-4">
