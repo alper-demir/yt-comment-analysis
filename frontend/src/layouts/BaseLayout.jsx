@@ -8,6 +8,10 @@ const BaseLayout = () => {
     useLayoutEffect(() => {
         const root = document.documentElement;
 
+        if (!theme && window.matchMedia("(prefers-color-scheme: dark)").matches) {
+            localStorage.setItem("theme", "system");
+        }
+
         if (theme === "light") {
             root.classList.remove("dark");
         } else if (theme === "dark") {
