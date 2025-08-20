@@ -3,13 +3,13 @@ import { Navigate, Outlet } from "react-router";
 import { authNverification } from "../services/authService"
 import MainLayout from "../layouts/MainLayout";
 
-const token = localStorage.getItem("token");
 
 const ProtectedRoute = () => {
   const [isVerified, setIsVerified] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
     if (token) {
       authNverification().then((data) => {
         setIsVerified(data?.authNverification || false);

@@ -1,7 +1,7 @@
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
-const token = localStorage.getItem("token");
 
 export const getAnalyzes = async (page, limit) => {
+    const token = localStorage.getItem("token");
     try {
         const response = await fetch(`${BACKEND_URL}/analizes?page=${page}&limit=${limit}`, {
             headers: {
@@ -17,6 +17,7 @@ export const getAnalyzes = async (page, limit) => {
 }
 
 export const getOneAnalyze = async (id) => {
+    const token = localStorage.getItem("token");
     try {
         const response = await fetch(`${BACKEND_URL}/analize/${id}`, {
             headers: {
@@ -32,6 +33,7 @@ export const getOneAnalyze = async (id) => {
 }
 
 export const getDashboardSummary = async () => {
+    const token = localStorage.getItem("token");
     try {
         const response = await fetch(`${BACKEND_URL}/dashboard-summary`, {
             headers: {

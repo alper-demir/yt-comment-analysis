@@ -2,7 +2,6 @@ import { clearUser } from '../redux/user';
 import { store } from './../store';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
-const token = localStorage.getItem("token");
 
 export const login = async (email, password) => {
     try {
@@ -43,6 +42,7 @@ export const register = async (email, password) => {
 }
 
 export const authNverification = async () => {
+    const token = localStorage.getItem("token");
     try {
         const response = await fetch(`${BACKEND_URL}/verify-token`, {
             headers: {
