@@ -10,6 +10,7 @@ import Settings from "./pages/Settings";
 import BaseLayout from "./layouts/BaseLayout";
 import Features from "./pages/Features";
 import ErrorPage from "./pages/ErrorPage";
+import Contact from "./pages/Contact";
 
 const router = createBrowserRouter([
     {
@@ -37,6 +38,7 @@ const router = createBrowserRouter([
                     { path: "/", element: <Home />, index: true },
                     { path: "/test", element: <div>Test</div> },
                     { path: "/features", element: <Features /> },
+                    { path: "/contact", element: <Contact /> },
                 ]
             }
         ]
