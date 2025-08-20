@@ -1,3 +1,6 @@
+import { clearUser } from '../redux/user';
+import { store } from './../store';
+
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
 const token = localStorage.getItem("token");
 
@@ -62,4 +65,10 @@ export const verifyAccount = async (userId) => {
     } catch (error) {
         console.log(error);
     }
+}
+
+export const logout = async () => {
+    store.dispatch(clearUser());
+    localStorage.removeItem("token");
+    window.location.href = "/login";
 }

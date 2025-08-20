@@ -35,6 +35,7 @@ import {
 
 import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router";
+import { logout } from "../services/authService";
 
 const publicItems = [
     { title: "Home", url: "/", icon: Home },
@@ -57,7 +58,7 @@ const dropdownItems = [
     { title: "Account", url: "/account" },
     { title: "Billing", url: "/billing" },
     { title: "Settings", url: "/settings" },
-    { title: "Signout", url: "/signout" }
+    { title: "Signout", url: "/#", onclick: logout }
 ];
 
 export function AppSidebar() {
@@ -117,7 +118,7 @@ export function AppSidebar() {
                                     className="w-[--radix-popper-anchor-width]"
                                 >
                                     {dropdownItems.map((item, index) => (
-                                        <DropdownMenuItem key={index}>
+                                        <DropdownMenuItem key={index} onClick={item.onclick}>
                                             {item.url ? (
                                                 <Link to={item.url}>{item.title}</Link>
                                             ) : (
