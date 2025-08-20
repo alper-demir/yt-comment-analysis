@@ -173,3 +173,78 @@ export const getAnalizes = async (req, res) => {
         return res.status(500).json({ message: error, error })
     }
 }
+
+export const getAnalize = async (req, res) => {
+    const { id } = req.params;
+    const { userId } = req.user;
+
+    try {
+        const analize = await Analize.findOne({ where: { videoId: id } });
+
+        if (!analize) return res.status(404).json({ message: "Analize record not found", status: false });
+        if (analize.userId !== userId) return res.status(403).json({ message: "You are not authorized to access this record", status: false })
+
+        const normalized = {
+            id: analize.id,
+            videoId: analize.videoId,
+            positive: analize.positive_comment_count,
+            negative: analize.negative_comment_count,
+            neutral: analize.neutral_comment_count,
+            totalComments: analize.total_comment_count,
+            liked_summary: analize.positive_comment_summary,
+            disliked_summary: analize.negative_comment_summary,
+            createdAt: analize.createdAt,
+        };
+        res.json(normalized);
+
+    } catch (error) {
+        return res.status(500).json({ message: error, error })
+    }
+}
+
+export const getDashboardSummary = async (req, res) => {
+    const { userId } = req.user;
+
+    try {
+        const [totalAnalyses, totalComments, totalTokens, positive, negative, neutral] = await Promise.all([
+            Analize.count({ where: { userId } }),
+            Analize.sum("total_comment_count", { where: { userId } }),
+            Analize.sum("total_token", { where: { userId } }),
+            Analize.sum("positive_comment_count", { where: { userId } }),
+            Analize.sum("negative_comment_count", { where: { userId } }),
+            Analize.sum("neutral_comment_count", { where: { userId } }),
+        ]);
+
+        // Son 5 analiz
+        const lastAnalyzes = await Analize.findAll({
+            where: { userId },
+            order: [["createdAt", "DESC"]],
+            limit: 5,
+            attributes: [
+                "id",
+                "videoId",
+                "positive_comment_count",
+                "negative_comment_count",
+                "neutral_comment_count",
+                "total_comment_count",
+                "total_token",
+                "createdAt",
+            ],
+        });
+
+        res.json({
+            totalAnalyses,
+            totalComments: totalComments || 0,
+            totalTokens: totalTokens || 0,
+            sentiment: {
+                positive: positive || 0,
+                negative: negative || 0,
+                neutral: neutral || 0,
+            },
+            lastAnalyzes,
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error", error });
+    }
+};

@@ -11,6 +11,8 @@ import BaseLayout from "./layouts/BaseLayout";
 import Features from "./pages/Features";
 import ErrorPage from "./pages/ErrorPage";
 import Contact from "./pages/Contact";
+import Dashboard from "./pages/Dashboard";
+import AnalysisDetail from './pages/AnalysisDetail';
 
 const router = createBrowserRouter([
     {
@@ -29,6 +31,8 @@ const router = createBrowserRouter([
                     { path: "calendar", element: <div>Calendar</div> },
                     { path: "settings", element: <Settings /> },
                     { path: "history", element: <AnalizeHistory /> },
+                    { path: "/dashboard", element: <Dashboard /> },
+                    { path: "/analysis/:id", element: <AnalysisDetail /> },
                 ]
             },
             {

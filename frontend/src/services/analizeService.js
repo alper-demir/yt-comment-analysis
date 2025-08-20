@@ -15,3 +15,33 @@ export const getAnalyzes = async (page, limit) => {
         console.log(error);
     }
 }
+
+export const getOneAnalyze = async (id) => {
+    try {
+        const response = await fetch(`${BACKEND_URL}/analize/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+            method: "GET"
+        })
+
+        return response;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const getDashboardSummary = async () => {
+    try {
+        const response = await fetch(`${BACKEND_URL}/dashboard-summary`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+            method: "GET",
+        });
+
+        return response;
+    } catch (error) {
+        console.log(error);
+    }
+};
