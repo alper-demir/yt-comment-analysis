@@ -1,11 +1,17 @@
 import { useEffect, useState } from "react";
-import { authNverification, login } from "../services/authService"
-import { Navigate, useNavigate } from 'react-router';
+import { authNverification, login } from "../services/authService";
+import { Link, useNavigate } from "react-router";
 import { useDispatch } from "react-redux";
 import { setUser } from "../redux/user";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { toast } from "react-hot-toast";
+import LoadingSpinner from "@/components/LoadingSpinner";
+import { Layers } from 'lucide-react';
 
 const Login = () => {
-
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
@@ -13,25 +19,31 @@ const Login = () => {
     const [password, setPassword] = useState("");
 
     const [loading, setLoading] = useState(true);
+    const [submitting, setSubmitting] = useState(false);
 
     const handleLogin = async () => {
+        setSubmitting(true);
         try {
             const response = await login(email, password);
             const data = await response.json();
             if (response.ok) {
-                dispatch(setUser(data.user))
+                dispatch(setUser(data.user));
                 localStorage.setItem("token", data.token);
-                navigate("/")
+                navigate("/");
+                toast.success("Login successful!");
             } else {
-                console.error("Login failed:", data);
+                toast.error(data.message || "Login failed");
             }
         } catch (error) {
+            toast.error("Something went wrong");
             console.error("Login error:", error);
+        } finally {
+            setSubmitting(false);
         }
     };
 
     useEffect(() => {
-        authNverification().then(data => {
+        authNverification().then((data) => {
             setLoading(false);
             if (data.authNverification) {
                 dispatch(setUser(data.user));
@@ -41,49 +53,78 @@ const Login = () => {
     }, []);
 
     if (loading) {
-        return <div>Loading...</div>
+        return (
+            <div className="flex items-center justify-center h-screen">
+                <LoadingSpinner size="lg" />
+            </div>
+        );
     }
 
     return (
-        <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
-            <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-                <img src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company" className="mx-auto h-10 w-auto" />
-                <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">Sign in to your account</h2>
-            </div>
+        <div className="flex items-center justify-center h-screen px-4">
+            <Card className="w-full max-w-md shadow-lg border rounded-2xl">
+                <CardHeader>
+                    <Layers className="mx-auto" />
+                    <CardTitle className="text-center text-2xl font-bold mt-4">Sign in</CardTitle>
+                    <CardDescription className="text-center">Access your account to continue</CardDescription>
+                </CardHeader>
 
-            <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-                <form action="#" method="POST" className="space-y-6">
-                    <div>
-                        <label htmlFor="email" className="block text-sm/6 font-medium text-gray-900">Email address</label>
-                        <div className="mt-2">
-                            <input id="email" type="email" name="email" required autoComplete="email" className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" onChange={(e) => setEmail(e.target.value)} value={email} />
-                        </div>
+                <CardContent className="space-y-6">
+                    <div className="space-y-2">
+                        <Label htmlFor="email">Email address</Label>
+                        <Input
+                            id="email"
+                            type="email"
+                            placeholder="you@example.com"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            disabled={submitting}
+                            required
+                        />
                     </div>
 
-                    <div>
+                    <div className="space-y-2">
                         <div className="flex items-center justify-between">
-                            <label htmlFor="password" className="block text-sm/6 font-medium text-gray-900">Password</label>
-                            <div className="text-sm">
-                                <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500">Forgot password?</a>
-                            </div>
+                            <Label htmlFor="password">Password</Label>
+                            <button
+                                type="button"
+                                className="text-sm text-indigo-600 hover:underline"
+                                onClick={() => toast("Forgot password clicked")}
+                            >
+                                Forgot password?
+                            </button>
                         </div>
-                        <div className="mt-2">
-                            <input id="password" type="password" name="password" required autoComplete="current-password" className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" onChange={(e) => setPassword(e.target.value)} value={password} />
-                        </div>
+                        <Input
+                            id="password"
+                            type="password"
+                            placeholder="••••••••"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            disabled={submitting}
+                            required
+                        />
                     </div>
 
-                    <div>
-                        <button type="button" onClick={handleLogin} className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Sign in</button>
-                    </div>
-                </form>
+                    <Button
+                        onClick={handleLogin}
+                        disabled={submitting}
+                        className="w-full cursor-pointer"
+                    >
+                        {submitting ? <LoadingSpinner size="sm" /> : "Sign in"}
+                    </Button>
+                </CardContent>
 
-                <p className="mt-10 text-center text-sm/6 text-gray-500">
-                    Not a member? {email + " " + password}
-                    <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500">Start a 14 day free trial</a>
-                </p>
-            </div>
+                <CardFooter className="flex justify-center text-sm text-gray-600">
+                    <p className="text-center text-sm text-gray-600">
+                        Don't you have an account?{" "}
+                        <Link to="/register" className="font-medium text-indigo-600 hover:underline">
+                            Sign up
+                        </Link>
+                    </p>
+                </CardFooter>
+            </Card>
         </div>
-    )
-}
+    );
+};
 
-export default Login
+export default Login;

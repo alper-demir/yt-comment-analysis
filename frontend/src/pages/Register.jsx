@@ -1,89 +1,131 @@
-import { useState } from "react";
-import { register } from "../services/authService";
-import LoadingSpinner from "../components/LoadingSpinner";
+import { useState } from "react"
+import { register } from "../services/authService"
+import LoadingSpinner from "../components/LoadingSpinner"
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Link, useNavigate } from "react-router"
+import { Layers } from 'lucide-react';
 
 const Register = () => {
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+    const [acceptedTerms, setAcceptedTerms] = useState(false)
+    const [loading, setLoading] = useState(false)
 
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const navigate = useNavigate()
 
-    const [loading, setLoading] = useState(false);
-
-    const mailRegex = (email) => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
-    };
-
-    const passwordRegex = (password) => {
-        // Minimum 8 karakter, en az 1 harf ve 1 rakam içermeli
-        const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
-        return passwordRegex.test(password);
-    };
+    const mailRegex = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+    const passwordRegex = (password) => /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(password)
 
     const handleRegister = async () => {
-
         if (!mailRegex(email)) {
-            alert("Geçerli bir e-posta girin.");
+            alert("Geçerli bir e-posta girin.")
             return;
         }
-
         if (!passwordRegex(password)) {
-            alert("Şifre en az 8 karakter, en az 1 harf ve 1 rakam içermelidir.");
+            alert("Şifre en az 8 karakter, en az 1 harf ve 1 rakam içermelidir.")
+            return;
+        }
+        if (!acceptedTerms) {
+            alert("Devam edebilmek için şartları kabul etmelisiniz.")
             return;
         }
 
-        setLoading(true);
-
-        const response = await register(email, password);
-        const data = await response.json();
-        if (response.ok) {
-            console.log(data);
-        } else {
-            // Notify user
+        setLoading(true)
+        try {
+            const response = await register(email, password)
+            const data = await response.json()
+            if (response.ok) {
+                console.log("Register success:", data)
+                navigate("/login")
+            } else {
+                console.error("Register failed:", data)
+            }
+        } catch (error) {
+            console.error("Register error:", error)
+        } finally {
+            setLoading(false)
         }
-        setLoading(false);
-        console.log(response.ok);
     }
 
     return (
-        <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
-            <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-                <img src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company" className="mx-auto h-10 w-auto" />
-                <h2 className="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">Register</h2>
-            </div>
+        <div className="flex h-screen items-center justify-center px-4">
+            <Card className="w-full max-w-md shadow-lg rounded-2xl">
+                <CardHeader className="text-center">
+                    <Layers className="mx-auto" />
+                    <CardTitle className="mt-4 text-2xl font-bold tracking-tight">Create your account</CardTitle>
+                </CardHeader>
 
-            <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-                <form action="#" method="POST" className="space-y-6">
-                    <div>
-                        <label for="email" className="block text-sm/6 font-medium text-gray-900">Email address</label>
-                        <div className="mt-2">
-                            <input id="email" type="email" name="email" required autocomplete="email" className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" onChange={(e) => setEmail(e.target.value)} value={email} />
-                        </div>
+                <CardContent className="space-y-4">
+                    <div className="space-y-2">
+                        <Label htmlFor="email">Email</Label>
+                        <Input
+                            id="email"
+                            type="email"
+                            placeholder="you@example.com"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
                     </div>
 
-                    <div className="mt-2">
-                        <input id="password" type="password" name="password" required autocomplete="current-password" className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" onChange={(e) => setPassword(e.target.value)} value={password} />
+                    <div className="space-y-2">
+                        <Label htmlFor="password">Password</Label>
+                        <Input
+                            id="password"
+                            type="password"
+                            placeholder="********"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+                        <p className="mt-1 text-xs text-gray-500">At least 8 characters, 1 letter and 1 number</p>
                     </div>
 
-                    <div>
-                        <button
-                            type="button"
-                            onClick={handleRegister}
-                            className={`flex w-full justify-center rounded-md px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 cursor-pointer disabled:cursor-not-allowed ${loading ? 'bg-indigo-400 opacity-80' : 'bg-indigo-600'}`}
-                            disabled={loading}
-                        >
-                            <span className="mr-2">Register</span>
-                            {loading && <LoadingSpinner color="blue" size="md" />}
-                        </button>
+                    <div className="flex items-center space-x-2">
+                        <Checkbox
+                            id="terms"
+                            checked={acceptedTerms}
+                            onCheckedChange={(val) => setAcceptedTerms(!!val)}
+                        />
+                        <Label htmlFor="terms" className="text-sm text-gray-600">
+                            I agree to the{" "}
+                            <a href="/terms" className="text-indigo-600 hover:underline" target="_blank">
+                                Terms
+                            </a>{" "}
+                            and{" "}
+                            <a href="/privacy" className="text-indigo-600 hover:underline" target="_blank">
+                                Privacy Policy
+                            </a>
+                        </Label>
                     </div>
+                </CardContent>
 
-                </form>
+                <CardFooter className="flex flex-col space-y-4">
+                    <Button
+                        onClick={handleRegister}
+                        disabled={loading}
+                        className="w-full"
+                    >
+                        {loading ? (
+                            <div className="flex items-center gap-2">
+                                <LoadingSpinner size="sm" color="white" />
+                                <span>Registering...</span>
+                            </div>
+                        ) : (
+                            "Register"
+                        )}
+                    </Button>
 
-                <p className="mt-10 text-center text-sm/6 text-gray-500">
-                    Not a member?
-                    <a href="#" className="font-semibold text-indigo-600 hover:text-indigo-500">Start a 14 day free trial</a>
-                </p>
-            </div>
+                    <p className="text-center text-sm text-gray-600">
+                        Already have an account?{" "}
+                        <Link to="/login" className="font-medium text-indigo-600 hover:underline">
+                            Sign in
+                        </Link>
+                    </p>
+                </CardFooter>
+            </Card>
         </div>
     )
 }
