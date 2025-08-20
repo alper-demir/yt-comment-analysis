@@ -189,10 +189,10 @@ const DashboardPage = () => {
                                 <TableRow key={a.id}>
                                     <TableCell>
                                         <Link
-                                            to={`/analysis/${a.videoId}`}
-                                            className="text-blue-600 hover:underline"
+                                            to={`/analysis/${a.id}`}
+                                            className="text-indigo-600 hover:underline"
                                         >
-                                            {a.videoId}
+                                            See Detail
                                         </Link>
                                     </TableCell>
                                     <TableCell>{a.positive_comment_count}</TableCell>

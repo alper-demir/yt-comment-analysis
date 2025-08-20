@@ -179,7 +179,7 @@ export const getAnalize = async (req, res) => {
     const { userId } = req.user;
 
     try {
-        const analize = await Analize.findOne({ where: { videoId: id } });
+        const analize = await Analize.findByPk(id);
 
         if (!analize) return res.status(404).json({ message: "Analize record not found", status: false });
         if (analize.userId !== userId) return res.status(403).json({ message: "You are not authorized to access this record", status: false })
