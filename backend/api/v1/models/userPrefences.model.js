@@ -8,7 +8,7 @@ const UserPreference = sequelize.define("UserPreference", {
         primaryKey: true,
     },
     theme: {
-        type: DataTypes.ENUM("light", "dark"),
+        type: DataTypes.ENUM("light", "dark", "system"),
         defaultValue: "light",
     },
     emailNotifications: {
@@ -17,7 +17,7 @@ const UserPreference = sequelize.define("UserPreference", {
     },
     language: {
         type: DataTypes.STRING,
-        defaultValue: "tr",
+        defaultValue: "tr-TR",
     }
 });
 
