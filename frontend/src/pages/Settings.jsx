@@ -11,13 +11,43 @@ import {
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { useEffect, useState } from "react";
 import { Sun, Moon, Monitor, Globe, Settings as SettingsIcon } from "lucide-react";
+import { useDispatch, useSelector } from 'react-redux';
+import { Switch } from '@/components/ui/switch';
+import { updateUserPreference } from "../services/userService";
+import { toast } from 'react-hot-toast';
+import { setUser } from '@/redux/user';
 
 const Settings = () => {
+
+  const { user } = useSelector(state => state.user);
+
   const [theme, setTheme] = useState("light");
   const [language, setLanguage] = useState("tr-TR");
+  const [emailNotifications, setEmailNotifications] = useState(true);
 
-  const changeTheme = (value) => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (user) {
+      setEmailNotifications(user?.UserPreference?.emailNotifications);
+      setLanguage(user?.UserPreference?.language);
+      setTheme(user?.UserPreference?.theme);
+    }
+  }, [user])
+
+  const changeTheme = async (value) => {
+    const response = await updateUserPreference({ theme: value }, user.id);
+    const data = await response.json();
+
+    if (!response.ok) {
+      toast.error(data.message);
+      return;
+    }
+
+    localStorage.setItem("token", data.token);
+    dispatch(setUser(data.user));
     setTheme(value);
+
     let doc = document.querySelector("html");
     if (value === "light") {
       localStorage.setItem("theme", "light");
@@ -36,21 +66,37 @@ const Settings = () => {
       }
     }
   }
-  const changeLanguage = (value) => setLanguage(value);
+  const changeLanguage = async (value) => {
+    const response = await updateUserPreference({ language: value }, user.id);
+    const data = await response.json();
 
-  const initTheme = () => {
-    const theme = localStorage.getItem("theme");
-    if (theme) setTheme(theme);
+    if (!response.ok) {
+      toast.error(data.message);
+      return;
+    }
+
+    localStorage.setItem("token", data.token);
+    dispatch(setUser(data.user));
+    setLanguage(value);
   }
 
-  useEffect(() => {
-    initTheme();
-  }, [])
+  const changeEmailNotifications = async (value) => {
+    const response = await updateUserPreference({ emailNotifications: value }, user.id);
+    const data = await response.json();
+
+    if (!response.ok) {
+      toast.error(data.message);
+      return;
+    }
+
+    localStorage.setItem("token", data.token);
+    dispatch(setUser(data.user));
+    setEmailNotifications((prev) => !prev);
+  }
 
   const languages = [
     { value: "tr-TR", label: "Türkçe" },
-    { value: "en-US", label: "English" },
-    { value: "fr-FR", label: "Français" },
+    { value: "en-US", label: "English" }
   ];
 
   return (
@@ -108,7 +154,11 @@ const Settings = () => {
                 </SelectGroup>
               </SelectContent>
             </Select>
-
+          </div>
+          <div className="flex items-center justify-between">
+            <Label htmlFor="email-notification">Email Notifications</Label>
+            <Switch id="email-notification" checked={emailNotifications}
+              onCheckedChange={changeEmailNotifications} />
           </div>
         </CardContent>
       </Card>
