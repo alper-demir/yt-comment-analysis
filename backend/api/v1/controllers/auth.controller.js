@@ -44,7 +44,7 @@ export const login = async (req, res) => {
 
         if (!email || !password) return res.status(400).json({ message: "Email and password are required" });
 
-        const user = await User.findOne({ where: { email }, include: { model: UserPreference, attributes: ['language', 'theme'] } });
+        const user = await User.findOne({ where: { email }, include: { model: UserPreference, attributes: ['language', 'theme', 'emailNotifications'] } });
 
         if (!user) return res.status(400).json({ message: "User not found" });
 
@@ -52,9 +52,10 @@ export const login = async (req, res) => {
         if (!decodedPassword) return res.status(400).json({ message: "Invalid password" });
 
         // if (!user.verified) return res.status(400).json({ message: "Please verify your account" });
-
-        const token = await generateToken({ userId: user.dataValues.id, email, theme: user.dataValues.UserPreference.theme, language: user.dataValues.UserPreference.language });
-        return res.status(200).json({ message: "Login successful", token, user });
+        const userObj = user.toJSON();
+        delete userObj.password;
+        const token = await generateToken(userObj);
+        return res.status(200).json({ message: "Login successful", token, user: userObj });
 
     } catch (error) {
         return res.status(500).json({ message: error, error })
