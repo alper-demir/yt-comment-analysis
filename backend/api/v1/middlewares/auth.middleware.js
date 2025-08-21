@@ -11,7 +11,7 @@ export const auth = async (req, res, next) => {
 
         const verify = await verifyToken(token);
         if (!verify.status) return res.status(401).json({ message: verify.message, authNverification: false })
-        req.user = { userId: verify.payload.id };
+        req.user = verify.payload;
         next();
     } catch (error) {
         return res.status(500).json({ message: error, error })

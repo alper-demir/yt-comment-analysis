@@ -48,7 +48,7 @@ export const getComments = async (req, res) => {
 
 export const analizeComments = async (req, res) => {
     const clientIp = req.clientIp;
-    const { userId } = req.user;
+    const userId = req.user.id;
     const { videoId } = req.body;
     console.log(clientIp);
 
@@ -152,7 +152,7 @@ export const analizeComments = async (req, res) => {
 }
 
 export const getAnalizes = async (req, res) => {
-    const { userId } = req.user;
+    const userId = req.user.id;
 
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
@@ -176,7 +176,7 @@ export const getAnalizes = async (req, res) => {
 
 export const getAnalize = async (req, res) => {
     const { id } = req.params;
-    const { userId } = req.user;
+    const userId = req.user.id;
 
     try {
         const analize = await Analize.findByPk(id);
@@ -203,7 +203,7 @@ export const getAnalize = async (req, res) => {
 }
 
 export const getDashboardSummary = async (req, res) => {
-    const { userId } = req.user;
+    const userId = req.user.id;
 
     try {
         const [totalAnalyses, totalComments, totalTokens, positive, negative, neutral] = await Promise.all([
