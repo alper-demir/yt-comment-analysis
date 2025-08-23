@@ -11,7 +11,11 @@ import {
     FileText,
     Key,
     ChevronUp,
-    Circle
+    Circle,
+    LogOut,
+    Settings,
+    Receipt,
+    CircleUserRound
 } from "lucide-react";
 
 import {
@@ -55,10 +59,10 @@ const privateItems = [
 ];
 
 const dropdownItems = [
-    { title: "Account", url: "/account" },
-    { title: "Billing", url: "/billing" },
-    { title: "Settings", url: "/settings" },
-    { title: "Signout", url: "/#", onclick: logout }
+    { title: "Account", url: "/account", icon: CircleUserRound },
+    { title: "Billing", url: "/billing", icon: Receipt },
+    { title: "Settings", url: "/settings", icon: Settings },
+    { title: "Signout", url: "/#", onclick: logout, icon: LogOut }
 ];
 
 export function AppSidebar() {
@@ -120,7 +124,7 @@ export function AppSidebar() {
                                     {dropdownItems.map((item, index) => (
                                         <DropdownMenuItem key={index} onClick={item.onclick} asChild>
                                             {item.url ? (
-                                                <Link to={item.url} className="cursor-pointer">{item.title}</Link>
+                                                <Link to={item.url} className="cursor-pointer"> <item.icon /> {item.title}</Link>
                                             ) : (
                                                 <span>{item.title}</span>
                                             )}
