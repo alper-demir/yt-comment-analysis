@@ -9,7 +9,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton"; // Shadcn UI Skeleton
 import { useEffect, useState } from "react";
 import { Sun, Moon, Monitor, Globe, Settings as SettingsIcon } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
