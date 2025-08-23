@@ -1,14 +1,13 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/db.config.js";
-import TokenPlan from "./tokenPlan.model.js";
 
-const Purchase = sequelize.define("Purchase", {
+const TokenPlan = sequelize.define("TokenPlan", {
     id: {
         type: DataTypes.UUID,
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4
     },
-    amount: {
+    tokens: {
         type: DataTypes.INTEGER,
         allowNull: false
     },
@@ -20,14 +19,10 @@ const Purchase = sequelize.define("Purchase", {
         type: DataTypes.STRING,
         defaultValue: "TRY"
     },
-    planId: {
-        type: DataTypes.UUID,
-        allowNull: false,
-        references: {
-            model: TokenPlan,
-            key: "id"
-        }
+    description: {
+        type: DataTypes.STRING,
+        allowNull: true
     }
 });
 
-export default Purchase;
+export default TokenPlan;

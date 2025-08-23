@@ -7,6 +7,7 @@ import User from "./api/v1/models/user.model.js";
 import authRoutes from "./api/v1/routes/auth.routes.js"
 import analysisRoutes from "./api/v1/routes/analysis.routes.js"
 import userRoutes from "./api/v1/routes/user.routes.js"
+import billingRoutes from "./api/v1/routes/billing.routes.js"
 import { clientIpMiddleware } from "./api/v1/middlewares/clientIp.middleware.js";
 import { requestLogger } from "./api/v1/logging/request.logger.js";
 import "./api/v1/models/index.js"
@@ -25,6 +26,7 @@ app.use(requestLogger);
 app.use("/api/v1", authRoutes);
 app.use("/api/v1", analysisRoutes);
 app.use("/api/v1", userRoutes);
+app.use("/api/v1", billingRoutes);
 
 const PORT = process.env.PORT || 3001;
 

@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router"
+import { createBrowserRouter, Navigate } from "react-router"
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -13,6 +13,9 @@ import ErrorPage from "./pages/ErrorPage";
 import Contact from "./pages/Contact";
 import Dashboard from "./pages/Dashboard";
 import AnalysisDetail from './pages/AnalysisDetail';
+import BillingLayout from "./layouts/BillingLayout";
+import BillingHistory from "./pages/Billing/BillingHistory";
+import Overview from "./pages/Billing/Overview";
 
 const router = createBrowserRouter([
     {
@@ -33,6 +36,15 @@ const router = createBrowserRouter([
                     { path: "history", element: <AnalizeHistory /> },
                     { path: "/dashboard", element: <Dashboard /> },
                     { path: "/analysis/:id", element: <AnalysisDetail /> },
+                    {
+                        path: "/billing",
+                        element: <BillingLayout />,
+                        children: [
+                            { index: true, element: <Navigate to="overview" replace /> }, // /billing → /billing/overview
+                            { path: "overview", element: <Overview /> },
+                            { path: "history", element: <BillingHistory /> },
+                        ],
+                    }
                 ]
             },
             {
