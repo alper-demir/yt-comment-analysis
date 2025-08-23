@@ -115,12 +115,12 @@ export function AppSidebar() {
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent
                                     side="top"
-                                    className="w-[--radix-popper-anchor-width]"
+                                    className="w-60"
                                 >
                                     {dropdownItems.map((item, index) => (
-                                        <DropdownMenuItem key={index} onClick={item.onclick}>
+                                        <DropdownMenuItem key={index} onClick={item.onclick} asChild>
                                             {item.url ? (
-                                                <Link to={item.url}>{item.title}</Link>
+                                                <Link to={item.url} className="cursor-pointer">{item.title}</Link>
                                             ) : (
                                                 <span>{item.title}</span>
                                             )}
