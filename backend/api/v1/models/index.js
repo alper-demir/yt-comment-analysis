@@ -1,6 +1,7 @@
 import User from "./user.model.js";
 import Analize from './analize.model.js';
 import UserPreference from "./userPrefences.model.js";
+import Purchase from "./purchase.model.js";
 
 // Relations
 
@@ -9,3 +10,7 @@ Analize.belongsTo(User, { foreignKey: 'userId' });
 
 User.hasOne(UserPreference, { foreignKey: 'userId' });
 UserPreference.belongsTo(User, { foreignKey: 'userId' });
+
+// User 1 - n Purchase relation
+User.hasMany(Purchase, { foreignKey: "userId" });
+Purchase.belongsTo(User, { foreignKey: "userId" });

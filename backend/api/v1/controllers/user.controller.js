@@ -1,3 +1,5 @@
+import sequelize from '../config/db.config.js';
+import Purchase from '../models/purchase.model.js';
 import User from '../models/user.model.js';
 import { generateToken } from '../utils/jwt.util.js';
 import UserPreference from './../models/userPrefences.model.js';
@@ -21,3 +23,47 @@ export const updateUserPreference = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 }
+
+export const buyTokens = async (req, res) => {
+    const t = await sequelize.transaction();
+    try {
+        const { amount, price } = req.body;
+        const user = await User.findByPk(req.user.id, { transaction: t });
+
+        user.tokens += amount;
+
+        await Promise.all([
+            user.save({ transaction: t }),
+            Purchase.create({
+                userId: user.id,
+                amount,
+                price,
+                currency: "TRY"
+            }, { transaction: t })
+        ]);
+
+        await t.commit();
+
+        return res.json({
+            message: "Token purchased",
+            tokens: user.tokens
+        });
+    } catch (error) {
+        await t.rollback();
+        res.status(500).json({ message: error.message });
+    }
+};
+
+export const getPurchaseHistory = async (req, res) => {
+    try {
+        const purchases = await Purchase.findAll({
+            where: { userId: req.user.id },
+            order: [["createdAt", "DESC"]]
+        });
+
+        return res.json(purchases);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: error.message });
+    }
+};

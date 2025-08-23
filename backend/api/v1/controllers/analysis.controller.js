@@ -1,5 +1,6 @@
 import OpenAI from "openai";
 import Analize from "../models/analize.model.js";
+import User from "../models/user.model.js";
 
 const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
 const BACKEND_URL = process.env.BACKEND_URL;
@@ -232,6 +233,8 @@ export const getDashboardSummary = async (req, res) => {
             ],
         });
 
+        const remainingTokens = await User.findByPk(userId, { attributes: ["tokens"] });
+
         res.json({
             totalAnalyses,
             totalComments: totalComments || 0,
@@ -242,6 +245,7 @@ export const getDashboardSummary = async (req, res) => {
                 neutral: neutral || 0,
             },
             lastAnalyzes,
+            remainingTokens: remainingTokens ? remainingTokens.tokens : 0,
         });
     } catch (error) {
         console.error(error);

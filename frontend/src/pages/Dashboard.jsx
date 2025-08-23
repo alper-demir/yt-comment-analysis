@@ -8,6 +8,7 @@ import { Link } from 'react-router';
 import LoadingSpinner from "@/components/LoadingSpinner";
 import toast from "react-hot-toast";
 import { HelpCircle } from "lucide-react"
+import { Button } from '@/components/ui/button';
 
 const DashboardPage = () => {
 
@@ -44,13 +45,13 @@ const DashboardPage = () => {
     if (!summary)
         return <p className="text-center mt-10">No dashboard data available.</p>;
 
-    const { totalAnalyses, totalComments, totalTokens, sentiment, lastAnalyzes } =
+    const { totalAnalyses, totalComments, totalTokens, sentiment, lastAnalyzes, remainingTokens } =
         summary;
 
     return (
         <div className="max-w-7xl mx-auto px-6 py-10 space-y-8">
             {/* Summary Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 <Card className="shadow-lg">
                     <CardHeader className="flex items-center">
                         <CardTitle>Total Analyses</CardTitle>
@@ -60,9 +61,7 @@ const DashboardPage = () => {
                                     <HelpCircle className="w-4 h-4 text-muted-foreground cursor-pointer" />
                                 </TooltipTrigger>
                                 <TooltipContent side="top" align="center">
-                                    <p>
-                                        Toplam yapılan analiz sayısını ifade eder.
-                                    </p>
+                                    <p>Toplam yapılan analiz sayısını ifade eder.</p>
                                 </TooltipContent>
                             </Tooltip>
                         </TooltipProvider>
@@ -81,9 +80,7 @@ const DashboardPage = () => {
                                     <HelpCircle className="w-4 h-4 text-muted-foreground cursor-pointer" />
                                 </TooltipTrigger>
                                 <TooltipContent side="top" align="center">
-                                    <p>
-                                        Tüm analizlerde işlenen toplam yorum sayısını ifade eder.
-                                    </p>
+                                    <p>Tüm analizlerde işlenen toplam yorum sayısını ifade eder.</p>
                                 </TooltipContent>
                             </Tooltip>
                         </TooltipProvider>
@@ -95,7 +92,7 @@ const DashboardPage = () => {
 
                 <Card className="shadow-lg">
                     <CardHeader className="flex items-center">
-                        <CardTitle>Total Tokens</CardTitle>
+                        <CardTitle>Token Usage</CardTitle>
                         <TooltipProvider>
                             <Tooltip>
                                 <TooltipTrigger asChild>
@@ -103,8 +100,7 @@ const DashboardPage = () => {
                                 </TooltipTrigger>
                                 <TooltipContent side="top" align="center">
                                     <p>
-                                        Toplam kullanılan token sayısı.
-                                        Her yorum analizi için API’de harcanan toplam işlem birimini ifade eder.
+                                        Toplam kullanılan token sayısı. Her yorum analizi için API’de harcanan toplam işlem birimini ifade eder.
                                     </p>
                                 </TooltipContent>
                             </Tooltip>
@@ -112,6 +108,30 @@ const DashboardPage = () => {
                     </CardHeader>
                     <CardContent>
                         <p className="text-2xl font-bold">{totalTokens}</p>
+                    </CardContent>
+                </Card>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+                <Card className="shadow-lg">
+                    <CardHeader className="flex items-center">
+                        <CardTitle>Remaining Tokens</CardTitle>
+                        <TooltipProvider>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <HelpCircle className="w-4 h-4 text-muted-foreground cursor-pointer" />
+                                </TooltipTrigger>
+                                <TooltipContent side="top" align="center">
+                                    <p>Kullanıcının bakiyesinde kalan token miktarını gösterir.</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="flex justify-between items-center">
+                            <p className="text-2xl font-bold">{remainingTokens}</p>
+                            <Button>Buy tokens</Button>
+                        </div>
                     </CardContent>
                 </Card>
 
@@ -128,6 +148,7 @@ const DashboardPage = () => {
                     </CardContent>
                 </Card>
             </div>
+
 
             {/* Sentiment Overview */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
@@ -211,6 +232,7 @@ const DashboardPage = () => {
             </Card>
         </div>
     );
+
 };
 
 export default DashboardPage;
