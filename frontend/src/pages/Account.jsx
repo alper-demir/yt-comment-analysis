@@ -8,7 +8,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { HelpCircle } from "lucide-react";
@@ -33,20 +32,15 @@ const Account = () => {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [passwordUpdating, setPasswordUpdating] = useState(false);
 
-    const [darkMode, setDarkMode] = useState(false);
-    const [notifications, setNotifications] = useState(true);
     const [loadingProfile, setLoadingProfile] = useState(true);
 
     const verified = true;
 
-    // isim ve soyisim düzenleme fonksiyonları
     const normalizeName = (name) => {
-        // baştaki/sondaki boşlukları kaldır, birden fazla boşluğu tek boşluk yap
         return name.trim().replace(/\s+/g, ' ');
     }
 
     const capitalizeWords = (str) => {
-        // her kelimenin ilk harfini büyük yap
         return str.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
     }
 
@@ -269,23 +263,6 @@ const Account = () => {
                     </CardContent>
                 </Card>
             </div>
-
-            {/* Preferences */}
-            <Card className="shadow-lg mt-6">
-                <CardHeader className="flex items-center justify-between">
-                    <CardTitle>Preferences</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                    <div className="flex items-center justify-between">
-                        <span>Dark Mode</span>
-                        <Switch checked={darkMode} onCheckedChange={() => setDarkMode(!darkMode)} />
-                    </div>
-                    <div className="flex items-center justify-between">
-                        <span>Notifications</span>
-                        <Switch checked={notifications} onCheckedChange={() => setNotifications(!notifications)} />
-                    </div>
-                </CardContent>
-            </Card>
         </div>
     );
 };
