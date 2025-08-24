@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "react-hot-toast";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { Layers } from 'lucide-react';
+import PasswordInput from "../components/PasswordInput";
 
 const Login = () => {
     const navigate = useNavigate();
@@ -94,14 +95,13 @@ const Login = () => {
                                 Forgot password?
                             </button>
                         </div>
-                        <Input
-                            id="password"
+                        <PasswordInput
+                            id="newPassword"
                             type="password"
-                            placeholder="••••••••"
+                            placeholder="********"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             disabled={submitting}
-                            required
                         />
                     </div>
 

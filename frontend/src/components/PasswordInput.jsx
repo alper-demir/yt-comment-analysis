@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Eye, EyeOff } from "lucide-react"
 
-const PasswordInput = ({ id, value, onChange, placeholder, label }) => {
+const PasswordInput = ({ id, value, onChange, placeholder, label, disabled }) => {
     const [show, setShow] = useState(false)
 
     return (
@@ -17,6 +17,7 @@ const PasswordInput = ({ id, value, onChange, placeholder, label }) => {
                     value={value}
                     onChange={onChange}
                     className="pr-10"
+                    disabled={disabled}
                 />
                 <Button
                     type="button"

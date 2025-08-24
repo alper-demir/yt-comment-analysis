@@ -9,6 +9,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Link, useNavigate } from "react-router"
 import { Layers } from 'lucide-react';
 import toast from "react-hot-toast"
+import PasswordInput from "../components/PasswordInput"
 
 const Register = () => {
 
@@ -107,8 +108,8 @@ const Register = () => {
                     {/* Password */}
                     <div className="space-y-2">
                         <Label htmlFor="password">Password</Label>
-                        <Input
-                            id="password"
+                        <PasswordInput
+                            id="newPassword"
                             type="password"
                             placeholder="********"
                             value={password}
