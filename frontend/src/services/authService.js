@@ -22,7 +22,7 @@ export const login = async (email, password) => {
     }
 }
 
-export const register = async (email, password) => {
+export const register = async (email, password, firstName, lastName) => {
     try {
         const response = await fetch(`${BACKEND_URL}/register`, {
             method: "POST",
@@ -31,7 +31,9 @@ export const register = async (email, password) => {
             },
             body: JSON.stringify({
                 email,
-                password
+                password,
+                firstName,
+                lastName
             })
         })
 

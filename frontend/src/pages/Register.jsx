@@ -8,8 +8,12 @@ import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Link, useNavigate } from "react-router"
 import { Layers } from 'lucide-react';
+import toast from "react-hot-toast"
 
 const Register = () => {
+
+    const [firstName, setFirstName] = useState("")
+    const [lastName, setLastName] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [acceptedTerms, setAcceptedTerms] = useState(false)
@@ -20,23 +24,27 @@ const Register = () => {
     const mailRegex = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
     const passwordRegex = (password) => /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(password)
 
+    const normalizeName = (name) => {
+        return name.trim().toLowerCase();
+    }
+
     const handleRegister = async () => {
         if (!mailRegex(email)) {
-            alert("Geçerli bir e-posta girin.")
+            toast.error("Please enter a valid email address.")
             return;
         }
         if (!passwordRegex(password)) {
-            alert("Şifre en az 8 karakter, en az 1 harf ve 1 rakam içermelidir.")
+            toast.error("Password must be at least 8 characters, contain at least 1 letter and 1 number.")
             return;
         }
         if (!acceptedTerms) {
-            alert("Devam edebilmek için şartları kabul etmelisiniz.")
+            toast.error("You must accept the terms and privacy policy to continue.")
             return;
         }
 
         setLoading(true)
         try {
-            const response = await register(email, password)
+            const response = await register(email, password, normalizeName(firstName), normalizeName(lastName))
             const data = await response.json()
             if (response.ok) {
                 console.log("Register success:", data)
@@ -60,6 +68,31 @@ const Register = () => {
                 </CardHeader>
 
                 <CardContent className="space-y-4">
+                    {/* First + Last Name */}
+                    <div className="flex gap-4">
+                        <div className="flex-1 space-y-2">
+                            <Label htmlFor="firstName">First Name</Label>
+                            <Input
+                                id="firstName"
+                                type="text"
+                                placeholder="John"
+                                value={firstName}
+                                onChange={(e) => setFirstName(e.target.value)}
+                            />
+                        </div>
+                        <div className="flex-1 space-y-2">
+                            <Label htmlFor="lastName">Last Name</Label>
+                            <Input
+                                id="lastName"
+                                type="text"
+                                placeholder="Doe"
+                                value={lastName}
+                                onChange={(e) => setLastName(e.target.value)}
+                            />
+                        </div>
+                    </div>
+
+                    {/* Email */}
                     <div className="space-y-2">
                         <Label htmlFor="email">Email</Label>
                         <Input
@@ -71,6 +104,7 @@ const Register = () => {
                         />
                     </div>
 
+                    {/* Password */}
                     <div className="space-y-2">
                         <Label htmlFor="password">Password</Label>
                         <Input
@@ -80,9 +114,12 @@ const Register = () => {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                         />
-                        <p className="mt-1 text-xs text-gray-500">At least 8 characters, 1 letter and 1 number</p>
+                        <p className="mt-1 text-xs text-gray-500">
+                            At least 8 characters, 1 letter and 1 number
+                        </p>
                     </div>
 
+                    {/* Terms */}
                     <div className="flex items-center space-x-2">
                         <Checkbox
                             id="terms"

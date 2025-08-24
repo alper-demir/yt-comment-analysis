@@ -8,11 +8,12 @@ export const register = async (req, res) => {
 
     const defaultLanguage = "en-US";
 
-    const { email, password } = req.body;
+    const { email, password, firstName, lastName } = req.body;
     const acceptLanguage = req.headers['accept-language'];
     const language = acceptLanguage ? acceptLanguage.split(',')[0] : defaultLanguage;
     try {
         if (!email || !password) return res.status(400).json({ message: "Email and password are required" });
+        if (!firstName || !lastName) return res.status(400).json({ message: "First name and last name are required" })
 
         const exsist = await User.findOne({ where: { email } });
         if (exsist) {
@@ -21,7 +22,7 @@ export const register = async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const user = await User.create({ email, password: hashedPassword });
+        const user = await User.create({ email, password: hashedPassword, firstName, lastName });
 
         await UserPreference.create({ userId: user.id, language });
 
