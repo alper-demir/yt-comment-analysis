@@ -16,6 +16,7 @@ import AnalysisDetail from './pages/AnalysisDetail';
 import BillingLayout from "./layouts/BillingLayout";
 import BillingHistory from "./pages/Billing/BillingHistory";
 import Overview from "./pages/Billing/Overview";
+import Account from "./pages/Account";
 
 const router = createBrowserRouter([
     {
@@ -36,6 +37,7 @@ const router = createBrowserRouter([
                     { path: "history", element: <AnalizeHistory /> },
                     { path: "/dashboard", element: <Dashboard /> },
                     { path: "/analysis/:id", element: <AnalysisDetail /> },
+                    { path: "/account", element: <Account /> },
                     {
                         path: "/billing",
                         element: <BillingLayout />,
