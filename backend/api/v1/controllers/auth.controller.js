@@ -53,6 +53,8 @@ export const login = async (req, res) => {
         if (!decodedPassword) return res.status(400).json({ message: "Invalid password" });
 
         // if (!user.verified) return res.status(400).json({ message: "Please verify your account" });
+        user.lastLogin = new Date();
+        await user.save();
         const userObj = user.toJSON();
         delete userObj.password;
         const token = await generateToken(userObj);

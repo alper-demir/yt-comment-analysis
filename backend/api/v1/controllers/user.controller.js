@@ -105,7 +105,7 @@ export const updateAccountInfo = async (req, res) => {
 export const getOneUserInfo = async (req, res) => {
     const { userId } = req.params;
     try {
-        const user = await User.findByPk(userId, { attributes: ['firstName', 'lastName', 'email'] });
+        const user = await User.findByPk(userId, { attributes: ['firstName', 'lastName', 'email', 'verified'] });
         if (!user) return res.status(404).json({ message: 'User not found' });
         res.status(200).json(user);
     } catch (error) {
@@ -125,6 +125,7 @@ export const changePassword = async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(newPassword, 10);
         user.password = hashedPassword;
+        user.lastPasswordChange = new Date();
         await user.save();
         res.status(200).json({ message: 'Password changed successfully' });
 

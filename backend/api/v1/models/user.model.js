@@ -34,7 +34,15 @@ const User = sequelize.define("User", {
         type: DataTypes.INTEGER,
         defaultValue: 0,
         allowNull: false
-    }
+    },
+    lastLogin: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW
+    },
+    lastPasswordChange: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW
+    },
 })
 
 export default User;
