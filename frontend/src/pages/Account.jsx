@@ -13,13 +13,15 @@ import LoadingSpinner from "@/components/LoadingSpinner";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { HelpCircle } from "lucide-react";
 import { getUserInfo, updateUserInfo } from "../services/userService";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { Skeleton } from "@/components/ui/skeleton";
+import { setUser } from "../redux/user";
 
 const Account = () => {
 
     const user = useSelector(state => state.user.user)
+    const dispatch = useDispatch();
 
     const [firstName, setFirstName] = useState("John");
     const [lastName, setLastName] = useState("Doe");
@@ -37,21 +39,40 @@ const Account = () => {
 
     const verified = true;
 
+    // isim ve soyisim düzenleme fonksiyonları
     const normalizeName = (name) => {
-        return name.trim().toLowerCase();
+        // baştaki/sondaki boşlukları kaldır, birden fazla boşluğu tek boşluk yap
+        return name.trim().replace(/\s+/g, ' ');
     }
+
+    const capitalizeWords = (str) => {
+        // her kelimenin ilk harfini büyük yap
+        return str.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
+    }
+
+    const onlyLettersAndSpaceRegex = /^[A-Za-z\s]+$/;
 
     const handleSaveProfile = async () => {
         if (!user?.id) return;
         if (!firstName || !lastName) return toast.error("First name and last name are required!");
         setProfileSaving(true);
-        const res = await updateUserInfo({ firstName: normalizeName(firstName), lastName: normalizeName(lastName) }, user.id);
+
+        const normalizedFirstName = normalizeName(firstName);
+        const normalizedLastName = normalizeName(lastName);
+
+        const res = await updateUserInfo({
+            firstName: normalizedFirstName.toLowerCase(),
+            lastName: normalizedLastName.toLowerCase()
+        }, user.id);
         const data = await res.json();
         if (!res.ok) {
             toast.error(data.message);
+            setProfileSaving(false);
             return;
         }
         toast.success("Profile updated!");
+        localStorage.setItem("token", data.token);
+        dispatch(setUser(data.user));
         setProfileSaving(false);
     };
 
@@ -81,10 +102,8 @@ const Account = () => {
                 return;
             }
 
-            const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-
-            setFirstName(capitalize(data.firstName));
-            setLastName(capitalize(data.lastName));
+            setFirstName(capitalizeWords(data.firstName));
+            setLastName(capitalizeWords(data.lastName));
             setEmail(data.email);
         } catch (err) {
             toast.error("Failed to load user info" + err.message);
@@ -128,7 +147,13 @@ const Account = () => {
                                     <Input
                                         id="firstName"
                                         value={firstName}
-                                        onChange={(e) => setFirstName(e.target.value)}
+                                        onChange={(e) => {
+                                            const val = e.target.value;
+                                            if (/^[A-Za-z\s]*$/.test(val)) {
+                                                setFirstName(val);
+                                            }
+                                        }}
+                                        onBlur={() => setFirstName(capitalizeWords(normalizeName(firstName)))}
                                     />
                                 )}
                             </div>
@@ -141,7 +166,12 @@ const Account = () => {
                                     <Input
                                         id="lastName"
                                         value={lastName}
-                                        onChange={(e) => setLastName(e.target.value)}
+                                        onChange={(e) => {
+                                            let val = normalizeName(e.target.value);
+                                            if (onlyLettersAndSpaceRegex.test(val) || val === "") {
+                                                setLastName(capitalizeWords(val));
+                                            }
+                                        }}
                                     />
                                 )}
                             </div>

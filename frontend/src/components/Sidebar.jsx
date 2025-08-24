@@ -65,9 +65,18 @@ const dropdownItems = [
     { title: "Signout", url: "/#", onclick: logout, icon: LogOut }
 ];
 
+const capitalizeFullName = (fullName) => {
+    if (!fullName) return "";
+    return fullName
+        .split(" ")
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ");
+};
+
 export function AppSidebar() {
     const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
-    const { email } = useSelector((state) => state.user.user || "");
+    const { user } = useSelector((state) => state.user);
+    const fullName = user?.firstName + " " + user?.lastName
     const location = useLocation();
 
     const items = isAuthenticated
@@ -113,7 +122,7 @@ export function AppSidebar() {
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
                                     <SidebarMenuButton>
-                                        <Circle />{email && email}
+                                        <Circle />{fullName && capitalizeFullName(fullName)}
                                         <ChevronUp className="ml-auto" />
                                     </SidebarMenuButton>
                                 </DropdownMenuTrigger>

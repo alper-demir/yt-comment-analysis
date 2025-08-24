@@ -85,12 +85,16 @@ export const updateAccountInfo = async (req, res) => {
     const { firstName, lastName } = req.body;
     try {
 
-        const user = await User.findByPk(userId, { attributes: { exclude: ['password'] } });
+        const user = await User.findByPk(userId, {
+            attributes: { exclude: ['password'] },
+            include: { model: UserPreference, attributes: ['theme', 'language', 'emailNotifications'] }
+        });
         if (!user) return res.status(404).json({ message: 'User not found' });
         user.firstName = firstName;
         user.lastName = lastName;
         await user.save();
-        res.status(200).json({ message: 'Account info updated successfully', user });
+        const token = await generateToken(user.toJSON())
+        res.status(200).json({ message: 'Account info updated successfully', user, token });
 
     } catch (error) {
         res.status(500).json({ message: error.message });
