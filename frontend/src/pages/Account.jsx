@@ -17,6 +17,7 @@ import toast from "react-hot-toast";
 import { Skeleton } from "@/components/ui/skeleton";
 import { setUser } from "../redux/user";
 import PasswordInput from "../components/PasswordInput";
+import { Badge } from "@/components/ui/badge";
 
 const Account = () => {
 
@@ -27,6 +28,7 @@ const Account = () => {
     const [lastName, setLastName] = useState("Doe");
     const [email, setEmail] = useState("johndoe@example.com");
     const [profileSaving, setProfileSaving] = useState(false);
+    const [isVerified, setIsVerified] = useState(false);
 
     const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
@@ -120,6 +122,7 @@ const Account = () => {
         try {
             const res = await getUserInfo(user.id);
             const data = await res.json();
+            console.log(data)
             if (!res.ok) {
                 toast.error(data.message);
                 return;
@@ -128,6 +131,7 @@ const Account = () => {
             setFirstName(capitalizeWords(data.firstName));
             setLastName(capitalizeWords(data.lastName));
             setEmail(data.email);
+            setIsVerified(data.verified)
         } catch (err) {
             toast.error("Failed to load user info" + err.message);
         } finally {
@@ -223,12 +227,14 @@ const Account = () => {
                             Save Profile
                         </Button>
 
-                        <p className="text-sm">
-                            Account Verified:{" "}
-                            <span className={`font-semibold ${verified ? "text-green-600" : "text-red-600"}`}>
-                                {verified ? "Yes" : "No"}
+                        <div>
+                            <span className="flex items-center gap-2 text-sm" >
+                                Account Verified:
+                                <Badge variant={isVerified ? "default" : "destructive"}>
+                                    {isVerified ? "Verified" : "Unverified"}
+                                </Badge>
                             </span>
-                        </p>
+                        </div>
                     </CardContent>
                 </Card>
 
