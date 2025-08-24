@@ -11,11 +11,12 @@ import { Label } from "@/components/ui/label";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { HelpCircle } from "lucide-react";
-import { getUserInfo, updateUserInfo } from "../services/userService";
+import { changePassword, getUserInfo, updateUserInfo } from "../services/userService";
 import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { Skeleton } from "@/components/ui/skeleton";
 import { setUser } from "../redux/user";
+import PasswordInput from "../components/PasswordInput";
 
 const Account = () => {
 
@@ -35,6 +36,8 @@ const Account = () => {
     const [loadingProfile, setLoadingProfile] = useState(true);
 
     const verified = true;
+
+    const passwordRegex = (password) => /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(password)
 
     const normalizeName = (name) => {
         return name.trim().replace(/\s+/g, ' ');
@@ -70,19 +73,45 @@ const Account = () => {
         setProfileSaving(false);
     };
 
-    const handleChangePassword = () => {
-        if (newPassword !== confirmPassword) {
-            alert("Passwords do not match");
+    const handleChangePassword = async () => {
+
+        if (!user?.id) return;
+
+        if (!currentPassword || !newPassword || !confirmPassword) {
+            toast.error("All fields are required");
             return;
         }
-        setPasswordUpdating(true);
-        setTimeout(() => {
-            setPasswordUpdating(false);
-            alert("Password updated!");
+
+        if (!passwordRegex(newPassword)) {
+            toast.error("Password must be at least 8 characters, contain at least 1 letter and 1 number.")
+            return;
+        }
+
+        if (newPassword !== confirmPassword) {
+            toast.error("Passwords do not match");
+            return;
+        }
+
+        try {
+            setPasswordUpdating(true);
+            const res = await changePassword({ oldPassword: currentPassword, newPassword: newPassword }, user.id);
+            const data = await res.json();
+
+            if (!res.ok) {
+                toast.error(data.message);
+                return;
+            }
+
+            toast.success("Password updated!");
             setCurrentPassword("");
             setNewPassword("");
             setConfirmPassword("");
-        }, 1200);
+
+        } catch (error) {
+            toast.error("Failed to update password" + error.message);
+        } finally {
+            setPasswordUpdating(false);
+        }
     };
 
     const fetchUserInfo = async () => {
@@ -221,7 +250,7 @@ const Account = () => {
                     <CardContent className="space-y-4">
                         <div className="space-y-2">
                             <Label htmlFor="currentPassword">Current Password</Label>
-                            <Input
+                            <PasswordInput
                                 id="currentPassword"
                                 type="password"
                                 placeholder="********"
@@ -232,7 +261,7 @@ const Account = () => {
 
                         <div className="space-y-2">
                             <Label htmlFor="newPassword">New Password</Label>
-                            <Input
+                            <PasswordInput
                                 id="newPassword"
                                 type="password"
                                 placeholder="********"
@@ -243,7 +272,7 @@ const Account = () => {
 
                         <div className="space-y-2">
                             <Label htmlFor="confirmPassword">Confirm New Password</Label>
-                            <Input
+                            <PasswordInput
                                 id="confirmPassword"
                                 type="password"
                                 placeholder="********"

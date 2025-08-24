@@ -1,6 +1,6 @@
 import express from "express";
 import { auth } from "../middlewares/auth.middleware.js";
-import { buyTokens, getOneUserRemainingTokens, getPurchaseHistory, updateAccountInfo, updateUserPreference, getOneUserInfo } from "../controllers/user.controller.js";
+import { buyTokens, getOneUserRemainingTokens, getPurchaseHistory, updateAccountInfo, updateUserPreference, getOneUserInfo, changePassword } from "../controllers/user.controller.js";
 
 const router = express.Router();
 
@@ -10,5 +10,6 @@ router.get("/purchase-history", auth, getPurchaseHistory);
 router.get("/remaining-tokens/:userId", auth, getOneUserRemainingTokens);
 router.put("/account/:userId", auth, updateAccountInfo);
 router.get("/account/:userId", auth, getOneUserInfo);
+router.put("/account/change-password/:userId", auth, changePassword);
 
 export default router;
