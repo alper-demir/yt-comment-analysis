@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/table";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import LoadingSpinner from "../components/LoadingSpinner";
+import { Button } from '@/components/ui/button';
 
 const AnalizeHistory = () => {
     const limit = 10;
@@ -76,7 +77,8 @@ const AnalizeHistory = () => {
                     <TableHead>Neutral</TableHead>
                     <TableHead>Total</TableHead>
                     <TableHead>Date</TableHead>
-                    <TableHead className="text-right">Token Usage</TableHead>
+                    <TableHead>Token Usage</TableHead>
+                    <TableHead className="text-right"></TableHead>
                 </TableRow>
             </TableHeader>
 
@@ -105,7 +107,8 @@ const AnalizeHistory = () => {
                             <TableCell>{analize.neutral_comment_count}</TableCell>
                             <TableCell>{analize.total_comment_count}</TableCell>
                             <TableCell>{new Date(analize.createdAt).toLocaleDateString("en-GB")}</TableCell>
-                            <TableCell className="text-right">{analize.total_token}</TableCell>
+                            <TableCell>{analize.total_token}</TableCell>
+                            <TableCell className="text-right"><Link to={`/analysis/${analize.id}`}><Button variant="outline">View</Button></Link></TableCell>
                         </TableRow>
                     ))
                 )}
@@ -113,7 +116,7 @@ const AnalizeHistory = () => {
 
             <TableFooter>
                 <TableRow>
-                    <TableCell colSpan={7}>
+                    <TableCell colSpan={8}>
                         <Pagination>
                             <PaginationContent>
                                 <PaginationItem>
