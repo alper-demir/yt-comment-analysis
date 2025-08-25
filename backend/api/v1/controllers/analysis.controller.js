@@ -1,6 +1,7 @@
 import OpenAI from "openai";
 import Analize from "../models/analize.model.js";
 import User from "../models/user.model.js";
+import { encoding_for_model } from "tiktoken";
 
 const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
 const BACKEND_URL = process.env.BACKEND_URL;
@@ -11,24 +12,21 @@ const openai = new OpenAI({
 
 export const getComments = async (req, res) => {
     const { id } = req.params;
-    // const response = await fetch(`https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&videoId=${id}&maxResults=100&key=${YOUTUBE_API_KEY}`, {
-    //     method: "GET"
-    // });
+    const response = await fetch(`https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&videoId=${id}&maxResults=100&key=${YOUTUBE_API_KEY}`, {
+        method: "GET"
+    });
 
-    // const data = await response.json();
+    const data = await response.json();
+    console.log(data);
 
-    // console.log(data);
+    if (data.error) {
+        console.log(data);
+        return res.status(data.error.code).json({ error: data.error.message });
+    }
+    if (data.items.length === 0) return res.status(400).json({ message: "No comments found", status: false });
 
-
-
-    // if (data.error) {
-    //     console.log(data);
-    //     return res.status(data.error.code).json({ error: data.error.message });
-    // }
-    //if (data.items.length === 0) return res.status(400).json({ message: "No comments found", status: false });
-
-    // const comments = data.items.map((item) => item.snippet.topLevelComment.snippet.textDisplay);
-    // console.log("Filtrelenmiş Yorumlar:" + comments);
+    const comments = data.items.map((item) => item.snippet.topLevelComment.snippet.textDisplay);
+    console.log("Filtrelenmiş Yorumlar:" + comments);
 
     const mockComments = []
 
@@ -38,13 +36,12 @@ export const getComments = async (req, res) => {
             "Content-Type": "application/json",
             "Authorization": req.headers.authorization
         },
-        // body: JSON.stringify({ comments,videoId: id }),
+        //body: JSON.stringify({ comments, videoId: id }),
         body: JSON.stringify({ comments: mockComments, videoId: id })
     })
 
     const anaylzedData = await resp.json();
-
-    res.json(anaylzedData);
+    res.status(200).json(anaylzedData);
 }
 
 export const analizeComments = async (req, res) => {
@@ -55,15 +52,14 @@ export const analizeComments = async (req, res) => {
 
     try {
         const { comments } = req.body;
-        console.log("analize comment func: " + req.user.userId)
         if (!comments || !Array.isArray(comments)) {
             return res.status(400).json({ error: "comments bir dizi olmalı" });
         }
 
-        // console.log("POST" + comments + comments.length);
-        // res.status(200).json({ message: "ok" });
+        const user = await User.findByPk(userId, { attributes: ['tokens', 'id'] });
+        if (!user) return res.status(404).json({ error: "User not found" });
 
-        // GPT prompt oluştur
+        // GPT promt
         const prompt = `
                         You are a helpful assistant for sentiment analysis and summarization.
                         Analyze the following user comments about a YouTube video. 
@@ -83,6 +79,19 @@ export const analizeComments = async (req, res) => {
                         }
                         `;
 
+
+        // const enc = encoding_for_model("gpt-3.5-turbo");
+        // const estimatedInputTokens = enc.encode(prompt).length;
+        // enc.free();
+        // console.log("Estimated input tokens:", estimatedInputTokens);
+
+        // const outputBuffer = 300; // Secure estimated token output
+        // const totalEstimate = estimatedInputTokens + outputBuffer;
+
+        // if (user.tokens < totalEstimate) {
+        //     return res.status(400).json({ message: "Not enough tokens to analyze the content" });
+        // }
+
         // const completion = await openai.chat.completions.create({
         //     model: "gpt-3.5-turbo",
         //     messages: [{ role: "user", content: prompt }],
@@ -90,42 +99,74 @@ export const analizeComments = async (req, res) => {
         //     //  temperature: 0.7,
         // });
 
-        //GPT cevabı al
+        // GPT cevabı al
         // const responseText = completion.choices[0].message.content;
-
-        // console.log("GPT Cevabı sade hali:", responseText);
 
         const mockResponse = {
             "positive": 5,
             "negative": 1,
             "neutral": 1,
             "liked_summary": "Users liked the official release of the soundtrack, the nostalgic feelings it brought, and the quality of the episode.",
-            "disliked_summary": "One user expressed sadness over a character death in Star Wars, which was the only negative comment."
+            "disliked_summary": "One user expressed sadness over a character death in Star Wars, which was the only negative comment.",
+            "inputTokens": "564",
+            "outputTokens": "134",
+            "totalTokens": "698",
+            "commentsCount": "7"
         }
 
-        // JSON parse et
+
+        // JSON parse, GPT gives text format in response
         // let jsonResponse;
         // try {
         //     jsonResponse = JSON.parse(responseText);
         // } catch {
-        //     return res.status(500).json({ error: "GPT cevabı JSON formatında değil", raw: responseText });
+        //     return res.status(500).json({ error: "GPT response is not in JSON format", raw: responseText });
         // }
-
-        // console.log("Token Kullanımı:", completion.usage);
 
         // const tokenUsage = completion.usage;
         // const totalTokens = tokenUsage.total_tokens;
         // const inputTokens = tokenUsage.prompt_tokens;
         // const outputTokens = tokenUsage.completion_tokens;
 
-        // console.log("Toplam Token Sayısı:", tokenUsage);
+        // jsonResponse.inputTokens = inputTokens;
+        // jsonResponse.outputTokens = outputTokens;
+        // jsonResponse.totalTokens = totalTokens;
+        // jsonResponse.commentsCount = comments.length;
+
+        // console.log("Toplam Token Kullanımı:", tokenUsage);
         // console.log("Toplam Token Sayısı:", totalTokens);
         // console.log("Giriş Token Sayısı:", inputTokens);
         // console.log("Çıkış Token Sayısı:", outputTokens);
 
-        // Create analysis record
+        // // Reduce user tokens
+        // if (totalTokens <= user.tokens) {
+        //     user.tokens -= totalTokens;
+        // } else {
+        //     // If actual usage > user balance, set it to 0
+        //     const subsidized = Math.abs(user.tokens - totalTokens); // The amount of tokens covered by the system
+        //     console.log("Subsidized tokens by the application: " + subsidized);
+        //     user.tokens = 0;
+        // }
 
-        const analize = await Analize.create({
+        // await user.save();
+
+        // Create analysis record
+        // await Analize.create({
+        //     ip: clientIp,
+        //     userId: userId ? userId : null,
+        //     positive_comment_count: jsonResponse.positive,
+        //     negative_comment_count: jsonResponse.negative,
+        //     neutral_comment_count: jsonResponse.neutral,
+        //     total_comment_count: comments.length,
+        //     positive_comment_summary: jsonResponse.liked_summary,
+        //     negative_comment_summary: jsonResponse.disliked_summary,
+        //     input_token: inputTokens,
+        //     output_token: outputTokens,
+        //     total_token: totalTokens,
+        //     videoId
+        // })
+
+        await Analize.create({
             ip: clientIp,
             userId: userId ? userId : null,
             positive_comment_count: mockResponse.positive,
@@ -134,18 +175,14 @@ export const analizeComments = async (req, res) => {
             total_comment_count: comments.length,
             positive_comment_summary: mockResponse.liked_summary,
             negative_comment_summary: mockResponse.disliked_summary,
-            input_token: 0,
-            output_token: 0,
-            total_token: 0,
+            input_token: inputTokens,
+            output_token: outputTokens,
+            total_token: totalTokens,
             videoId
         })
 
-        console.log("Analize record : " + analize);
-
-
-        //res.json(jsonResponse);
-        res.json(mockResponse);
-
+        //return res.status(200).json(jsonResponse);
+        res.status(200).json(mockResponse);
     } catch (error) {
         console.error("API hatası:", error);
         res.status(500).json({ error: "Sunucu hatası" });
