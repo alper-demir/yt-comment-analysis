@@ -32,7 +32,7 @@ const User = sequelize.define("User", {
     },
     tokens: {
         type: DataTypes.INTEGER,
-        defaultValue: 0,
+        defaultValue: 20000,
         allowNull: false
     },
     lastLogin: {
