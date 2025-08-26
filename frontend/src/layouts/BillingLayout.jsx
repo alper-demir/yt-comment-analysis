@@ -26,7 +26,7 @@ const BillingLayout = () => {
             <Tabs value={activeTab} onValueChange={handleTabChange}>
                 <TabsList className="mb-6">
                     <TabsTrigger value="overview">Overview</TabsTrigger>
-                    <TabsTrigger value="history">Purchase History</TabsTrigger>
+                    <TabsTrigger value="history">Payment History</TabsTrigger>
                     {/* <TabsTrigger value="plans">Plans</TabsTrigger>
                     <TabsTrigger value="payment-methods">Payment Methods</TabsTrigger> */}
                 </TabsList>

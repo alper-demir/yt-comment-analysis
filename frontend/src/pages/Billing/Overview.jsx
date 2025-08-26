@@ -1,6 +1,6 @@
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { getRemainingTokens, purchaseTokens } from "@/services/billingService";
+import { getRemainingTokens } from "@/services/billingService";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
@@ -52,17 +52,6 @@ const Overview = () => {
     useEffect(() => {
         fetchToken();
     }, [user]);
-
-    const handleBuy = async (plan) => {
-        if (!user?.id) return;
-        const res = await purchaseTokens({ planId: plan.id });
-        const data = await res.json();
-        if (!res.ok) {
-            toast.error(data.message);
-            return;
-        }
-        setRemainingTokens(data.tokens);
-    };
 
     return (
         <div className="space-y-6">

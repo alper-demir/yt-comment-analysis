@@ -14,11 +14,12 @@ import Contact from "./pages/Contact";
 import Dashboard from "./pages/Dashboard";
 import AnalysisDetail from './pages/AnalysisDetail';
 import BillingLayout from "./layouts/BillingLayout";
-import BillingHistory from "./pages/Billing/BillingHistory";
 import Overview from "./pages/Billing/Overview";
 import Account from "./pages/Account";
 import Pricing from "./pages/Pricing";
-import Checkout from "./pages/Checkout";
+import Checkout from "./pages/Payment/Checkout";
+import PaymentHistory from "./pages/Billing/PaymentHistory";
+import PaymentResult from "./pages/Payment/PaymentResult";
 
 const router = createBrowserRouter([
     {
@@ -41,13 +42,14 @@ const router = createBrowserRouter([
                     { path: "/analysis/:id", element: <AnalysisDetail /> },
                     { path: "/account", element: <Account /> },
                     { path: "/checkout", element: <Checkout /> },
+                    { path: "/payment/result", element: <PaymentResult /> },
                     {
                         path: "/billing",
                         element: <BillingLayout />,
                         children: [
                             { index: true, element: <Navigate to="overview" replace /> }, // /billing → /billing/overview
                             { path: "overview", element: <Overview /> },
-                            { path: "history", element: <BillingHistory /> },
+                            { path: "history", element: <PaymentHistory /> },
                         ],
                     }
                 ]

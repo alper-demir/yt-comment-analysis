@@ -1,7 +1,7 @@
 import User from "./user.model.js";
 import Analize from './analize.model.js';
 import UserPreference from "./userPrefences.model.js";
-import Purchase from "./purchase.model.js";
+import Payment from "./payment.model.js";
 import TokenPlan from "./tokenPlan.model.js";
 
 // Relations
@@ -12,9 +12,9 @@ Analize.belongsTo(User, { foreignKey: 'userId' });
 User.hasOne(UserPreference, { foreignKey: 'userId' });
 UserPreference.belongsTo(User, { foreignKey: 'userId' });
 
-// User 1 - n Purchase relation
-User.hasMany(Purchase, { foreignKey: "userId" });
-Purchase.belongsTo(User, { foreignKey: "userId" });
+// User 1 - n Payment relation
+User.hasMany(Payment, { foreignKey: "userId" });
+Payment.belongsTo(User, { foreignKey: "userId" });
 
-Purchase.belongsTo(TokenPlan, { foreignKey: 'planId' });
-TokenPlan.hasMany(Purchase, { foreignKey: 'planId' });
+Payment.belongsTo(TokenPlan, { foreignKey: 'planId' });
+TokenPlan.hasMany(Payment, { foreignKey: 'planId' });

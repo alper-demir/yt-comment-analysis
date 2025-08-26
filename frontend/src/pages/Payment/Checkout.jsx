@@ -3,7 +3,8 @@ import { useSearchParams } from "react-router";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { getTokenPlans, createCheckoutSession } from "@/services/billingService";
+import { getTokenPlans } from "@/services/billingService";
+import { createCheckoutSession } from "@/services/paymentService";
 import toast from "react-hot-toast";
 
 const Checkout = () => {
@@ -53,7 +54,9 @@ const Checkout = () => {
                 return;
             }
             // redirect iyzico paymentPageUrl
-            window.location.href = data.paymentPageUrl;
+            // window.location.href = data.paymentPageUrl;
+            window.open(data.paymentPageUrl, "_blank"); // new tab
+
         } catch (err) {
             console.error(err);
             toast.error("Checkout failed");
