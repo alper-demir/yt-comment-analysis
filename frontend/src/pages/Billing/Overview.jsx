@@ -6,11 +6,12 @@ import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { Skeleton } from '@/components/ui/skeleton';
 import { getTokenPlans } from "@/services/billingService";
+import { useNavigate } from "react-router";
 
 const Overview = () => {
 
     const user = useSelector(state => state.user.user)
-
+    const navigate = useNavigate();
     const [remainingTokens, setRemainingTokens] = useState(0);
     const [loading, setLoading] = useState(true);
     const [tokenPlans, setTokenPlans] = useState([]);
@@ -88,7 +89,7 @@ const Overview = () => {
                             <p>Price: {plan.price + plan.currency}</p>
                         </CardContent>
                         <CardFooter>
-                            <Button onClick={() => handleBuy(plan)}>Buy</Button>
+                            <Button onClick={() => navigate(`/checkout?plan=${plan.id}`)}>Buy</Button>
                         </CardFooter>
                     </Card>
                 ))}

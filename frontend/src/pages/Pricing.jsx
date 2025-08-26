@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
 import { getTokenPlans } from "../services/billingService";
 import LoadingSpinner from "../components/LoadingSpinner";
+import { useNavigate } from "react-router";
 
 const Pricing = () => {
+    const navigate = useNavigate();
     const [plans, setPlans] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -69,7 +70,7 @@ const Pricing = () => {
                                 </CardContent>
 
                                 <CardFooter className="flex justify-center">
-                                    <Button size="lg" className="w-full">
+                                    <Button size="lg" className="w-full" onClick={() => navigate(`/checkout?plan=${plan.id}`)}>
                                         Buy Now
                                     </Button>
                                 </CardFooter>
