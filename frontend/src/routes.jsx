@@ -17,6 +17,7 @@ import BillingLayout from "./layouts/BillingLayout";
 import BillingHistory from "./pages/Billing/BillingHistory";
 import Overview from "./pages/Billing/Overview";
 import Account from "./pages/Account";
+import Pricing from "./pages/Pricing";
 
 const router = createBrowserRouter([
     {
@@ -57,6 +58,7 @@ const router = createBrowserRouter([
                     { path: "/test", element: <div>Test</div> },
                     { path: "/features", element: <Features /> },
                     { path: "/contact", element: <Contact /> },
+                    { path: "/pricing", element: <Pricing /> },
                 ]
             }
         ]

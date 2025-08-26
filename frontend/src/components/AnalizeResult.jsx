@@ -8,20 +8,15 @@ import LoadingSpinner from "./LoadingSpinner";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const AnalizeResult = ({ analysis, videoId = null }) => {
-
     const [isImageLoading, setIsImageLoading] = useState(true);
 
-
-    const totalComments =
-        (analysis?.positive || 0) +
-        (analysis?.negative || 0) +
-        (analysis?.neutral || 0);
+    const totalComments = Number(analysis?.commentCount || 0);
 
     const percentages = totalComments
         ? {
-            positive: ((analysis.positive || 0) / totalComments * 100).toFixed(1),
-            negative: ((analysis.negative || 0) / totalComments * 100).toFixed(1),
-            neutral: ((analysis.neutral || 0) / totalComments * 100).toFixed(1),
+            positive: ((analysis.positive || 0) / totalComments * 100).toFixed(2),
+            negative: ((analysis.negative || 0) / totalComments * 100).toFixed(2),
+            neutral: ((analysis.neutral || 0) / totalComments * 100).toFixed(2),
         }
         : { positive: 0, negative: 0, neutral: 0 };
 
@@ -60,15 +55,16 @@ const AnalizeResult = ({ analysis, videoId = null }) => {
                     />
                 </div>
                 <a
-                    href={`https://www.youtube.com/watch?v=${analysis.videoId}`}
+                    href={`https://www.youtube.com/watch?v=${analysis.videoId || videoId}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-sm hover:text-blue-600 transition"
                 >
-                    {`https://www.youtube.com/watch?v=${analysis.videoId}`}
+                    {`https://www.youtube.com/watch?v=${analysis.videoId || videoId}`}
                 </a>
             </div>
             <Separator />
+
             <h2 className="text-xl font-semibold">Analysis Results</h2>
             <p>
                 Total Comments Analyzed:{" "}
@@ -103,7 +99,7 @@ const AnalizeResult = ({ analysis, videoId = null }) => {
                 )}
             </div>
 
-            {/* Stats Cards */}
+            {/* Sentiment Stats */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <Card className="text-center p-4">
                     <p className="font-medium">Positive</p>
@@ -124,6 +120,22 @@ const AnalizeResult = ({ analysis, videoId = null }) => {
                 </Card>
             </div>
 
+            {/* Token Usage */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <Card className="text-center p-4">
+                    <p className="font-medium">Input Tokens</p>
+                    <p className="text-2xl font-bold">{analysis.inputTokens || 0}</p>
+                </Card>
+                <Card className="text-center p-4">
+                    <p className="font-medium">Output Tokens</p>
+                    <p className="text-2xl font-bold">{analysis.outputTokens || 0}</p>
+                </Card>
+                <Card className="text-center p-4">
+                    <p className="font-medium">Total Tokens</p>
+                    <p className="text-2xl font-bold">{analysis.totalTokens || 0}</p>
+                </Card>
+            </div>
+
             {/* Summaries */}
             <div className="space-y-2">
                 <p className="font-medium">Liked Summary:</p>
@@ -141,4 +153,4 @@ const AnalizeResult = ({ analysis, videoId = null }) => {
     )
 }
 
-export default AnalizeResult
+export default AnalizeResult;

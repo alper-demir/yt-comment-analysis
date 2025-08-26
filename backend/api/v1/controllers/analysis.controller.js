@@ -12,21 +12,21 @@ const openai = new OpenAI({
 
 export const getComments = async (req, res) => {
     const { id } = req.params;
-    const response = await fetch(`https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&videoId=${id}&maxResults=100&key=${YOUTUBE_API_KEY}`, {
-        method: "GET"
-    });
+    // const response = await fetch(`https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&videoId=${id}&maxResults=100&key=${YOUTUBE_API_KEY}`, {
+    //     method: "GET"
+    // });
 
-    const data = await response.json();
-    console.log(data);
+    // const data = await response.json();
+    // console.log(data);
 
-    if (data.error) {
-        console.log(data);
-        return res.status(data.error.code).json({ error: data.error.message });
-    }
-    if (data.items.length === 0) return res.status(400).json({ message: "No comments found", status: false });
+    // if (data.error) {
+    //     console.log(data);
+    //     return res.status(data.error.code).json({ error: data.error.message });
+    // }
+    // if (data.items.length === 0) return res.status(400).json({ message: "No comments found", status: false });
 
-    const comments = data.items.map((item) => item.snippet.topLevelComment.snippet.textDisplay);
-    console.log("Filtrelenmiş Yorumlar:" + comments);
+    // const comments = data.items.map((item) => item.snippet.topLevelComment.snippet.textDisplay);
+    // console.log("Filtrelenmiş Yorumlar:" + comments);
 
     const mockComments = []
 
@@ -111,7 +111,7 @@ export const analizeComments = async (req, res) => {
             "inputTokens": "564",
             "outputTokens": "134",
             "totalTokens": "698",
-            "commentsCount": "7"
+            "commentCount": "7"
         }
 
 
@@ -172,12 +172,12 @@ export const analizeComments = async (req, res) => {
             positive_comment_count: mockResponse.positive,
             negative_comment_count: mockResponse.negative,
             neutral_comment_count: mockResponse.neutral,
-            total_comment_count: comments.length,
+            total_comment_count: mockResponse.commentCount,
             positive_comment_summary: mockResponse.liked_summary,
             negative_comment_summary: mockResponse.disliked_summary,
-            input_token: inputTokens,
-            output_token: outputTokens,
-            total_token: totalTokens,
+            input_token: mockResponse.inputTokens,
+            output_token: mockResponse.outputTokens,
+            total_token: mockResponse.totalTokens,
             videoId
         })
 
@@ -228,9 +228,12 @@ export const getAnalize = async (req, res) => {
             positive: analize.positive_comment_count,
             negative: analize.negative_comment_count,
             neutral: analize.neutral_comment_count,
-            totalComments: analize.total_comment_count,
+            commentCount: analize.total_comment_count,
             liked_summary: analize.positive_comment_summary,
             disliked_summary: analize.negative_comment_summary,
+            inputTokens: analize.input_token,
+            outputTokens: analize.output_token,
+            totalTokens: analize.total_token,
             createdAt: analize.createdAt,
         };
         res.json(normalized);

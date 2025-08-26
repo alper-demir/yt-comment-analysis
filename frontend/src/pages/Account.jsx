@@ -229,7 +229,7 @@ const Account = () => {
 
                         <div>
                             <span className="flex items-center gap-2 text-sm" >
-                                Account Verified:
+                                Status:
                                 <Badge variant={isVerified ? "default" : "destructive"}>
                                     {isVerified ? "Verified" : "Unverified"}
                                 </Badge>
