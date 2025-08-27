@@ -11,6 +11,7 @@ import { clientIpMiddleware } from "./api/v1/middlewares/clientIp.middleware.js"
 import { requestLogger } from "./api/v1/logging/request.logger.js";
 import "./api/v1/models/index.js"
 import bodyParser from "body-parser";
+import sequelize from "./api/v1/config/db.config.js";
 dotenv.config();
 
 const app = express();
@@ -31,7 +32,6 @@ app.use("/api/v1", paymentRoutes);
 const PORT = process.env.PORT || 3001;
 
 //await sequelize.sync({ alter: true });
-//await sequelize.sync({ force: true });
 
 app.listen(PORT, () => {
     console.log(`Server is running on port: http://localhost:${PORT}`);
