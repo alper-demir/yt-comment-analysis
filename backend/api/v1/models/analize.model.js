@@ -41,6 +41,10 @@ const Analize = sequelize.define("Analize", {
     videoId: {
         type: DataTypes.STRING,
         allowNull: false,
+    },
+    trialAccessAnalysis: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
     }
 })
 

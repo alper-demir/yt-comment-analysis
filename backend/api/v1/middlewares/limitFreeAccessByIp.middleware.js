@@ -8,16 +8,15 @@ export const limitFreeAccessByIp = async (req, res, next) => {
     const { userId } = req.user;
     try {
 
-        if (userId !== null) { // later
-            const user = await User.findByPk(userId);
-            return next();
-            // if (user?.isSubscribed || user?.tokenCount > 0) {
-            //     return next();
-            // }
+        if (userId !== null) {
+            const user = await User.findByPk(userId, { attributes: ['tokens'] });
+            if (user.tokens > 0) {
+                return next();
+            }
         }
 
         let record = await TrialAccess.findOne({ where: { ip } });
-
+        
         if (!record) {
             record = await TrialAccess.create({ ip, usage_count: 1, last_access_at: new Date() });
             return next();

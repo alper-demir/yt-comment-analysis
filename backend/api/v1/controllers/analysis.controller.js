@@ -2,9 +2,11 @@ import OpenAI from "openai";
 import Analize from "../models/analize.model.js";
 import User from "../models/user.model.js";
 import { encoding_for_model } from "tiktoken";
+import TrialAccess from "../models/trialAccess.model.js";
 
 const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
 const BACKEND_URL = process.env.BACKEND_URL;
+const FREE_LIMIT = 2; // Trial Access limit
 
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
@@ -17,17 +19,12 @@ export const getComments = async (req, res) => {
     // });
 
     // const data = await response.json();
-    // console.log(data);
-
     // if (data.error) {
-    //     console.log(data);
     //     return res.status(data.error.code).json({ error: data.error.message });
     // }
     // if (data.items.length === 0) return res.status(400).json({ message: "No comments found", status: false });
 
     // const comments = data.items.map((item) => item.snippet.topLevelComment.snippet.textDisplay);
-    // console.log("Filtrelenmiş Yorumlar:" + comments);
-
     const mockComments = []
 
     const resp = await fetch(`${BACKEND_URL}/analyze-comments`, {
@@ -48,7 +45,6 @@ export const analizeComments = async (req, res) => {
     const clientIp = req.clientIp;
     const userId = req.user.id;
     const { videoId } = req.body;
-    console.log(clientIp);
 
     try {
         const { comments } = req.body;
@@ -88,8 +84,25 @@ export const analizeComments = async (req, res) => {
         // const outputBuffer = 300; // Secure estimated token output
         // const totalEstimate = estimatedInputTokens + outputBuffer;
 
+        let trialAccess = false;
+        // Not enough token, Check if the user has any free trial rights left (ip)
         // if (user.tokens < totalEstimate) {
-        //     return res.status(400).json({ message: "Not enough tokens to analyze the content" });
+        //     let record = await TrialAccess.findOne({ where: { ip: clientIp } });
+        //     if (!record) {
+        //         record = await TrialAccess.create({ ip: clientIp, usage_count: 1, last_access_at: new Date() });
+        //         trialAccess = true;
+        //     }
+
+        //     if (record.usage_count >= FREE_LIMIT) {
+        //         return res.status(403).json({
+        //             success: false,
+        //             message: "Not enough tokens and free trial limit reached.",
+        //         });
+        //     }
+        //     trialAccess = true;
+        //     record.usage_count += 1;
+        //     record.last_access_at = new Date();
+        //     await record.save();
         // }
 
         // const completion = await openai.chat.completions.create({
@@ -99,7 +112,7 @@ export const analizeComments = async (req, res) => {
         //     //  temperature: 0.7,
         // });
 
-        // GPT cevabı al
+        // // GPT response
         // const responseText = completion.choices[0].message.content;
 
         const mockResponse = {
@@ -113,7 +126,6 @@ export const analizeComments = async (req, res) => {
             "totalTokens": "698",
             "commentCount": "7"
         }
-
 
         // JSON parse, GPT gives text format in response
         // let jsonResponse;
@@ -131,26 +143,28 @@ export const analizeComments = async (req, res) => {
         // jsonResponse.inputTokens = inputTokens;
         // jsonResponse.outputTokens = outputTokens;
         // jsonResponse.totalTokens = totalTokens;
-        // jsonResponse.commentsCount = comments.length;
+        // jsonResponse.commentCount = comments.length;
+        // jsonResponse.trialAccessAnalysis = trialAccess;
 
-        // console.log("Toplam Token Kullanımı:", tokenUsage);
-        // console.log("Toplam Token Sayısı:", totalTokens);
-        // console.log("Giriş Token Sayısı:", inputTokens);
-        // console.log("Çıkış Token Sayısı:", outputTokens);
+        // console.log("Token usage:", tokenUsage);
+        // console.log("Total token:", totalTokens);
+        // console.log("Input token:", inputTokens);
+        // console.log("Output token:", outputTokens);
+        // console.log("Trial Access:", trialAccess);
 
         // // Reduce user tokens
-        // if (totalTokens <= user.tokens) {
+        // if (totalTokens <= user.tokens && !trialAccess) {
         //     user.tokens -= totalTokens;
         // } else {
         //     // If actual usage > user balance, set it to 0
         //     const subsidized = Math.abs(user.tokens - totalTokens); // The amount of tokens covered by the system
         //     console.log("Subsidized tokens by the application: " + subsidized);
-        //     user.tokens = 0;
+        //     if (!trialAccess) user.tokens = 0;
         // }
 
         // await user.save();
 
-        // Create analysis record
+        // // Create analysis record
         // await Analize.create({
         //     ip: clientIp,
         //     userId: userId ? userId : null,
@@ -163,7 +177,8 @@ export const analizeComments = async (req, res) => {
         //     input_token: inputTokens,
         //     output_token: outputTokens,
         //     total_token: totalTokens,
-        //     videoId
+        //     videoId,
+        //     trialAccessAnalysis: trialAccess
         // })
 
         await Analize.create({
@@ -178,14 +193,15 @@ export const analizeComments = async (req, res) => {
             input_token: mockResponse.inputTokens,
             output_token: mockResponse.outputTokens,
             total_token: mockResponse.totalTokens,
-            videoId
+            videoId,
+            trialAccessAnalysis: trialAccess,
         })
 
         //return res.status(200).json(jsonResponse);
-        res.status(200).json(mockResponse);
+        return res.status(200).json(mockResponse);
     } catch (error) {
-        console.error("API hatası:", error);
-        res.status(500).json({ error: "Sunucu hatası" });
+        console.error("API error:", error);
+        res.status(500).json({ error: "Server error" });
     }
 }
 
@@ -235,6 +251,7 @@ export const getAnalize = async (req, res) => {
             outputTokens: analize.output_token,
             totalTokens: analize.total_token,
             createdAt: analize.createdAt,
+            trialAccessAnalysis: analize.trialAccessAnalysis
         };
         res.json(normalized);
 

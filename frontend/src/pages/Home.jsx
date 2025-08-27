@@ -50,10 +50,12 @@ const Home = () => {
       });
       const data = await response.json();
       console.log(data);
-      if (!response.ok) throw new Error(data.message);
-
-      setAnalysis(data);
+      if (!response.ok || data.success === false) {
+        toast.error(data.message);
+        return;
+      }
       toast.success("Analize completed!");
+      setAnalysis(data);
     } catch (err) {
       setError(err.message);
       toast.error(err.message);
