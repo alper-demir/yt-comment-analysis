@@ -4,6 +4,9 @@ import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { useState } from "react";
 import LoadingSpinner from "./LoadingSpinner";
+import { Badge } from "@/components/ui/badge";
+import { Tooltip as ShadcnuiToolTip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { HelpCircle } from "lucide-react";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -38,7 +41,7 @@ const AnalizeResult = ({ analysis, videoId = null }) => {
         : null;
 
     return (
-        <div className="space-y-6 max-w-3xl mx-auto">
+        <div className="space-y-6 max-w-3xl mx-auto p-4">
             <div className="mt-6 flex flex-col items-center gap-3">
                 <div className="relative w-full max-w-lg flex justify-center items-center">
                     {isImageLoading && (
@@ -65,11 +68,28 @@ const AnalizeResult = ({ analysis, videoId = null }) => {
             </div>
             <Separator />
 
-            <h2 className="text-xl font-semibold">Analysis Results</h2>
-            <p>
-                Total Comments Analyzed:{" "}
-                <span className="font-semibold">{totalComments}</span>
-            </p>
+            <h2 className="text-xl font-semibold flex items-center gap-2">
+                Analysis Results
+                {analysis.trialAccessAnalysis && (
+                    <TooltipProvider>
+                        <ShadcnuiToolTip>
+                            <TooltipTrigger asChild>
+                                <Badge
+                                    variant="secondary"
+                                    className="bg-teal-500 text-white dark:bg-teal-600 cursor-pointer"
+                                >
+                                    Trial Access <HelpCircle />
+                                </Badge>
+                            </TooltipTrigger>
+                            <TooltipContent side="top" align="center" className="max-w-xs">
+                                <p>
+                                    No tokens were consumed. Provided as part of trial access.
+                                </p>
+                            </TooltipContent>
+                        </ShadcnuiToolTip>
+                    </TooltipProvider>
+                )}
+            </h2>
 
             {/* Pie Chart */}
             <div className="max-w-xs mx-auto">

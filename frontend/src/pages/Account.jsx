@@ -144,7 +144,7 @@ const Account = () => {
     }, [user])
 
     return (
-        <div className="container mx-auto py-6">
+        <div className="container mx-auto py-6 px-2 max-sm:px-3">
             <h1 className="text-2xl font-bold mb-6 text-center">Account Settings</h1>
 
             {/* Grid layout: Profile | Security */}

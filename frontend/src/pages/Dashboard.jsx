@@ -4,10 +4,10 @@ import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell, TableFoo
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { getDashboardSummary } from "../services/analizeService";
 import { CheckCircle, AlertCircle, Info } from "lucide-react";
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import LoadingSpinner from "@/components/LoadingSpinner";
 import toast from "react-hot-toast";
-import { HelpCircle } from "lucide-react"
+import { HelpCircle, BarChart3, MessageCircle, Database, Coins, Clock } from "lucide-react";
 import { Button } from '@/components/ui/button';
 
 const DashboardPage = () => {
@@ -16,6 +16,7 @@ const DashboardPage = () => {
 
     const [summary, setSummary] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchSummary = async () => {
@@ -23,7 +24,6 @@ const DashboardPage = () => {
             try {
                 const res = await getDashboardSummary();
                 const data = await res.json();
-                console.log(data)
                 if (!res.ok) {
                     toast.error(data.message || "Failed to fetch dashboard data");
                     return;
@@ -53,7 +53,8 @@ const DashboardPage = () => {
             {/* Summary Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 <Card className="shadow-lg">
-                    <CardHeader className="flex items-center">
+                    <CardHeader className="flex items-center gap-2">
+                        <BarChart3 className="w-5 h-5 text-muted-foreground" />
                         <CardTitle>Total Analyses</CardTitle>
                         <TooltipProvider>
                             <Tooltip>
@@ -61,7 +62,7 @@ const DashboardPage = () => {
                                     <HelpCircle className="w-4 h-4 text-muted-foreground cursor-pointer" />
                                 </TooltipTrigger>
                                 <TooltipContent side="top" align="center">
-                                    <p>Toplam yapılan analiz sayısını ifade eder.</p>
+                                    <p>Represents the total number of analyses performed.</p>
                                 </TooltipContent>
                             </Tooltip>
                         </TooltipProvider>
@@ -72,7 +73,8 @@ const DashboardPage = () => {
                 </Card>
 
                 <Card className="shadow-lg">
-                    <CardHeader className="flex items-center">
+                    <CardHeader className="flex items-center gap-2">
+                        <MessageCircle className="w-5 h-5 text-muted-foreground" />
                         <CardTitle>Total Comments</CardTitle>
                         <TooltipProvider>
                             <Tooltip>
@@ -80,7 +82,7 @@ const DashboardPage = () => {
                                     <HelpCircle className="w-4 h-4 text-muted-foreground cursor-pointer" />
                                 </TooltipTrigger>
                                 <TooltipContent side="top" align="center">
-                                    <p>Tüm analizlerde işlenen toplam yorum sayısını ifade eder.</p>
+                                    <p>Represents the total number of comments processed across all analyses.</p>
                                 </TooltipContent>
                             </Tooltip>
                         </TooltipProvider>
@@ -91,7 +93,8 @@ const DashboardPage = () => {
                 </Card>
 
                 <Card className="shadow-lg">
-                    <CardHeader className="flex items-center">
+                    <CardHeader className="flex items-center gap-2">
+                        <Database className="w-5 h-5 text-muted-foreground" />
                         <CardTitle>Token Usage</CardTitle>
                         <TooltipProvider>
                             <Tooltip>
@@ -100,7 +103,7 @@ const DashboardPage = () => {
                                 </TooltipTrigger>
                                 <TooltipContent side="top" align="center">
                                     <p>
-                                        Toplam kullanılan token sayısı. Her yorum analizi için API’de harcanan toplam işlem birimini ifade eder.
+                                        Shows the total number of tokens consumed, representing the API transaction units spent across all comment analyses.
                                     </p>
                                 </TooltipContent>
                             </Tooltip>
@@ -114,7 +117,8 @@ const DashboardPage = () => {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
                 <Card className="shadow-lg">
-                    <CardHeader className="flex items-center">
+                    <CardHeader className="flex items-center gap-2">
+                        <Coins className="w-5 h-5 text-muted-foreground" />
                         <CardTitle>Remaining Tokens</CardTitle>
                         <TooltipProvider>
                             <Tooltip>
@@ -122,7 +126,7 @@ const DashboardPage = () => {
                                     <HelpCircle className="w-4 h-4 text-muted-foreground cursor-pointer" />
                                 </TooltipTrigger>
                                 <TooltipContent side="top" align="center">
-                                    <p>Kullanıcının bakiyesinde kalan token miktarını gösterir.</p>
+                                    <p>Indicates the number of tokens currently available in the user’s balance.</p>
                                 </TooltipContent>
                             </Tooltip>
                         </TooltipProvider>
@@ -130,13 +134,14 @@ const DashboardPage = () => {
                     <CardContent>
                         <div className="flex justify-between items-center">
                             <p className="text-2xl font-bold">{remainingTokens}</p>
-                            <Button>Buy tokens</Button>
+                            <Button onClick={() => navigate("/checkout")}>Buy tokens</Button>
                         </div>
                     </CardContent>
                 </Card>
 
                 <Card className="shadow-lg">
-                    <CardHeader>
+                    <CardHeader className="flex items-center gap-2">
+                        <Clock className="w-5 h-5 text-muted-foreground" />
                         <CardTitle>Last Analysis</CardTitle>
                     </CardHeader>
                     <CardContent>
