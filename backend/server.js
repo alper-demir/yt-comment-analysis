@@ -12,6 +12,8 @@ import { requestLogger } from "./api/v1/logging/request.logger.js";
 import "./api/v1/models/index.js"
 import bodyParser from "body-parser";
 import sequelize from "./api/v1/config/db.config.js";
+import "./api/v1/cron/cleanPendingPayments.js";
+
 dotenv.config();
 
 const app = express();

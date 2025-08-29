@@ -4,6 +4,7 @@ import TokenPlan from './../models/tokenPlan.model.js';
 import User from './../models/user.model.js';
 import Iyzipay from "iyzipay";
 import sequelize from "../config/db.config.js";
+import { Op } from "sequelize";
 
 export const createCheckoutSession = async (req, res) => {
     const clientIp = req.clientIp;
@@ -106,7 +107,7 @@ export const paymentCallback = async (req, res) => {
 
     iyzipay.checkoutForm.retrieve({ token }, async (err, result) => {
         if (err) return res.status(500).send(err);
-        
+
         const t = await sequelize.transaction();
 
         try {
@@ -147,7 +148,7 @@ export const paymentCallback = async (req, res) => {
 export const getPaymentHistory = async (req, res) => {
     try {
         const purchases = await Payment.findAll({
-            where: { userId: req.user.id },
+            where: { userId: req.user.id, status: { [Op.in]: ['SUCCESS', 'FAILURE'] } },
             order: [["createdAt", "DESC"]]
         });
 
