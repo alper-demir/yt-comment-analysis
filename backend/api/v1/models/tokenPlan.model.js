@@ -7,6 +7,10 @@ const TokenPlan = sequelize.define("TokenPlan", {
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4
     },
+    name: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
     tokens: {
         type: DataTypes.INTEGER,
         allowNull: false

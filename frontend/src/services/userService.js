@@ -68,3 +68,20 @@ export const changePassword = async (data, userId) => {
         console.log(error);
     }
 }
+
+export const createContactRecord = async (data) => {
+    const token = localStorage.getItem("token");
+    try {
+        const response = await fetch(`${BACKEND_URL}/contact/create`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify(data)
+        })
+        return response;
+    } catch (error) {
+        console.log(error);
+    }
+}

@@ -6,26 +6,41 @@ import { Button } from "@/components/ui/button";
 import { Mail } from "lucide-react";
 import { useState } from "react";
 import { toast } from 'react-hot-toast';
+import { createContactRecord } from "@/services/userService";
 
 const MAX_MESSAGE_LENGTH = 400;
 
 const ContactPage = () => {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
+    const [subject, setSubject] = useState("");
     const [message, setMessage] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (!name || !email || !subject || !message) toast.error("Please fill all the fields!");
+        if (!emailRegex.test(email)) {
+            toast.error("Please enter a valid email address");
+            return;
+        }
         setIsSubmitting(true);
-        // API call 
-        setTimeout(() => {
-            toast.success("Your message has been sent!");
-            setName("");
-            setEmail("");
-            setMessage("");
+        const res = await createContactRecord({ name, email, subject, message })
+        const data = await res.json();
+
+        if (!res.ok) {
+            toast.error(data.message);
             setIsSubmitting(false);
-        }, 1000);
+            return;
+        };
+
+        toast.success("Your message has been sent!");
+        setName("");
+        setEmail("");
+        setSubject("");
+        setMessage("");
+        setIsSubmitting(false);
     };
 
     return (
@@ -36,7 +51,7 @@ const ContactPage = () => {
                 </CardHeader>
                 <CardContent>
                     <form className="space-y-4" onSubmit={handleSubmit}>
-                        <div className="flex flex-col gap-y-1">
+                        <div className="flex flex-col gap-y-2">
                             <Label htmlFor="name">Name</Label>
                             <Input
                                 id="name"
@@ -46,7 +61,7 @@ const ContactPage = () => {
                                 required
                             />
                         </div>
-                        <div className="flex flex-col gap-y-1">
+                        <div className="flex flex-col gap-y-2">
                             <Label htmlFor="email">Email</Label>
                             <Input
                                 id="email"
@@ -57,7 +72,18 @@ const ContactPage = () => {
                                 required
                             />
                         </div>
-                        <div className="flex flex-col gap-y-1">
+                        <div className="flex flex-col gap-y-2">
+                            <Label htmlFor="subject">Subject</Label>
+                            <Input
+                                id="subject"
+                                type="subject"
+                                placeholder="Subject"
+                                value={subject}
+                                onChange={(e) => setSubject(e.target.value)}
+                                required
+                            />
+                        </div>
+                        <div className="flex flex-col gap-y-2">
                             <Label htmlFor="message">Message</Label>
                             <Textarea
                                 id="message"
@@ -83,7 +109,7 @@ const ContactPage = () => {
 
             <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
                 <Mail className="w-5 h-5" />
-                <span>contact@ytanaysisapp.com</span>
+                <span>alper.demirr23@gmail.com</span>
             </div>
         </div>
     );

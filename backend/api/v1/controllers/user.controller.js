@@ -2,6 +2,7 @@ import User from '../models/user.model.js';
 import { generateToken } from '../utils/jwt.util.js';
 import UserPreference from './../models/userPrefences.model.js';
 import bcrypt from 'bcrypt';
+import Contact from './../models/contact.model.js';
 
 export const updateUserPreference = async (req, res) => {
     const { userId } = req.params;
@@ -84,5 +85,23 @@ export const changePassword = async (req, res) => {
 
     } catch (error) {
         res.status(500).json({ message: error.message });
+    }
+}
+
+export const createContactRecord = async (req, res) => {
+    const { name, email, subject, message } = req.body;
+    const { clientIp } = req;
+    try {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) return res.status(400).json({ message: "Invalid email" });
+        if (name.length > 100 || subject.length > 150 || message.length > 400) {
+            return res.status(400).json({ message: "Field too long" });
+        }
+        const contactRecord = await Contact.create({ name, email, subject, message, ip: clientIp });
+        if (!contactRecord) return res.status(400).json({ message: 'Contact record create error' });
+        res.status(200).json({ message: 'Contact record created successfully' });
+
+    } catch (error) {
+        res.status(500).json({ message: "DB Error: " + error.message });
     }
 }
