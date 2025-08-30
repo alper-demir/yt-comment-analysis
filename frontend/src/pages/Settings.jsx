@@ -1,13 +1,4 @@
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue, } from "@/components/ui/select";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { useEffect, useState } from "react";
 import { Sun, Moon, Monitor, Globe, Settings as SettingsIcon, Bell } from "lucide-react";
@@ -17,10 +8,13 @@ import { updateUserPreference } from "../services/userService";
 import { toast } from "react-hot-toast";
 import { setUser } from "@/redux/user";
 import LoadingSpinner from '@/components/LoadingSpinner';
+import i18n from "@/i18n";
+import { useTranslation } from "react-i18next";
 
 const Settings = () => {
   const { user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   const [loading, setLoading] = useState(true);
   const [theme, setTheme] = useState(null);
@@ -78,6 +72,7 @@ const Settings = () => {
     localStorage.setItem("token", data.token);
     dispatch(setUser(data.user));
     setLanguage(value);
+    i18n.changeLanguage(value);
   };
 
   const changeEmailNotifications = async (value) => {
@@ -112,7 +107,7 @@ const Settings = () => {
       <Card className="w-full max-w-2xl shadow-lg rounded-2xl">
         <CardHeader>
           <CardTitle className="text-2xl font-bold flex items-center gap-x-2">
-            <SettingsIcon className="w-6 h-6" /> Settings
+            <SettingsIcon className="w-6 h-6" /> {t("settings.title")}
           </CardTitle>
         </CardHeader>
 
@@ -122,29 +117,29 @@ const Settings = () => {
             <div className="flex items-center gap-3">
               <Sun className="w-5 h-5 text-yellow-500" />
               <div>
-                <p className="font-medium text-sm">Theme</p>
-                <p className="text-xs text-muted-foreground">Choose your appearance mode</p>
+                <p className="font-medium text-sm">{t("settings.theme.label")}</p>
+                <p className="text-xs text-muted-foreground">{t("settings.theme.description")}</p>
               </div>
             </div>
             <Select value={theme ?? "light"} onValueChange={changeTheme}>
               <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select theme" />
+                <SelectValue placeholder={t("settings.theme.placeholder")} />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  <SelectItem value="light" className="cursor-pointer">
+                  <SelectItem value="light">
                     <div className="flex items-center gap-2">
-                      <Sun className="w-4 h-4 text-yellow-500" /> Light
+                      <Sun className="w-4 h-4 text-yellow-500" /> {t("settings.theme.options.light")}
                     </div>
                   </SelectItem>
-                  <SelectItem value="dark" className="cursor-pointer">
+                  <SelectItem value="dark">
                     <div className="flex items-center gap-2">
-                      <Moon className="w-4 h-4 text-blue-500" /> Dark
+                      <Moon className="w-4 h-4 text-blue-500" /> {t("settings.theme.options.dark")}
                     </div>
                   </SelectItem>
-                  <SelectItem value="system" className="cursor-pointer">
+                  <SelectItem value="system">
                     <div className="flex items-center gap-2">
-                      <Monitor className="w-4 h-4" /> System
+                      <Monitor className="w-4 h-4" /> {t("settings.theme.options.system")}
                     </div>
                   </SelectItem>
                 </SelectGroup>
@@ -157,20 +152,20 @@ const Settings = () => {
             <div className="flex items-center gap-3">
               <Globe className="w-5 h-5 text-green-500" />
               <div>
-                <p className="font-medium text-sm">Language</p>
-                <p className="text-xs text-muted-foreground">Select your preferred language</p>
+                <p className="font-medium text-sm">{t("settings.language.label")}</p>
+                <p className="text-xs text-muted-foreground">{t("settings.language.description")}</p>
               </div>
             </div>
             <Select value={language ?? "tr-TR"} onValueChange={changeLanguage}>
               <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select language" />
+                <SelectValue placeholder={t("settings.language.placeholder")} />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
                   {languages.map((lang) => (
                     <SelectItem key={lang.value} value={lang.value} className="cursor-pointer">
                       <div className="flex items-center gap-2">
-                        <Globe className="w-4 h-4" /> {lang.label}
+                        <Globe className="w-4 h-4" /> {t(`settings.language.options.${lang.value}`)}
                       </div>
                     </SelectItem>
                   ))}
@@ -184,8 +179,8 @@ const Settings = () => {
             <div className="flex items-center gap-3">
               <Bell className="w-5 h-5 text-red-500" />
               <div>
-                <p className="font-medium text-sm">Email Notifications</p>
-                <p className="text-xs text-muted-foreground">Receive updates via email</p>
+                <p className="font-medium text-sm">{t("settings.notifications.label")}</p>
+                <p className="text-xs text-muted-foreground">{t("settings.notifications.description")}</p>
               </div>
             </div>
             <Switch

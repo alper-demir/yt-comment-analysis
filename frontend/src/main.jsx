@@ -5,6 +5,7 @@ import { RouterProvider } from 'react-router'
 import routes from "./routes.jsx"
 import { store } from "./store.js"
 import { Toaster } from 'react-hot-toast'
+import './i18n';
 
 createRoot(document.getElementById('root')).render(
   <Provider store={store}>

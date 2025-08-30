@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { Toaster, toast } from "react-hot-toast";
+import { toast } from "react-hot-toast";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import AnalizeResult from "../components/AnalizeResult";
+import { useTranslation } from "react-i18next";
 
 
 const Home = () => {
@@ -17,6 +18,7 @@ const Home = () => {
 
   const YOUTUBE_ID_LENGTH = 11;
   const token = localStorage.getItem("token");
+  const { t } = useTranslation();
 
   // Extract video ID
   const extractVideoId = (url) => {
@@ -33,8 +35,9 @@ const Home = () => {
     const videoId = extractVideoId(url);
     if (!videoId) {
       setIsValidUrl(false);
-      setError("Please provide a valid YouTube video link");
-      toast.error("Please provide a valid YouTube video link");
+      const msg = t("home.errors.invalidUrl");
+      setError(msg);
+      toast.error(msg);
       return;
     }
 
@@ -54,7 +57,7 @@ const Home = () => {
         toast.error(data.message);
         return;
       }
-      toast.success("Analize completed!");
+      toast.success(t("home.success.analysisCompleted"));
       setAnalysis(data);
     } catch (err) {
       setError(err.message);
@@ -69,22 +72,21 @@ const Home = () => {
       <Card className="w-full max-w-3xl shadow-lg border">
         <CardHeader className="space-y-2">
           <CardTitle className="text-2xl font-bold text-center">
-            YouTube Comment Analysis
+            {t("home.title")}
           </CardTitle>
           <CardDescription className="text-center">
-            Provide a YouTube video link and we'll analyze the comments!
+            {t("home.description")}
           </CardDescription>
         </CardHeader>
 
         <CardContent className="space-y-8">
-          {/* Input Alanı */}
           <div className="space-y-2">
-            <Label htmlFor="url">Video Link</Label>
+            <Label htmlFor="url">{t("home.videoLabel")}</Label>
             <div className="flex gap-2">
               <Input
                 id="url"
                 type="text"
-                placeholder="https://www.youtube.com/watch?v=..."
+                placeholder={t("home.videoPlaceholder")}
                 value={url}
                 onChange={(e) => {
                   setUrl(e.target.value);
@@ -98,7 +100,7 @@ const Home = () => {
                 disabled={isLoading}
                 className="min-w-[120px] cursor-pointer"
               >
-                {isLoading ? "Analyzing..." : "Analyze"}
+                {isLoading ? t("home.analyzing") : t("home.analyzeButton")}
               </Button>
             </div>
             {!isValidUrl && (
@@ -106,10 +108,8 @@ const Home = () => {
             )}
           </div>
 
-          {/* Loading */}
           {isLoading && <LoadingSpinner size="md" />}
 
-          {/* Results */}
           {analysis && (
             <AnalizeResult analysis={analysis} videoId={extractVideoId(url)} />
           )}

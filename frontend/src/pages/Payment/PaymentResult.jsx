@@ -2,8 +2,10 @@ import { useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useTranslation } from "react-i18next";
 
 const PaymentResult = () => {
+    const { t } = useTranslation();
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
 
@@ -35,25 +37,29 @@ const PaymentResult = () => {
         <div className="flex justify-center items-center h-screen">
             <Card className="w-[400px] text-center">
                 <CardHeader>
-                    <CardTitle>Payment {status}</CardTitle>
+                    <CardTitle>
+                        {t("paymentResult.title", { status })}
+                    </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                    <p>Your payment for plan <strong>{planId}</strong> is:</p>
+                    <p>
+                        {t("paymentResult.description", { planId })}
+                    </p>
                     <Badge className={`${getStatusColor()} text-white px-4 py-2 rounded-full`}>
-                        {status}
+                        {t(`paymentResult.status.${status?.toLowerCase() || "unknown"}`)}
                     </Badge>
                     <p className="text-sm text-muted-foreground">
-                        You will be redirected shortly...
+                        {t("paymentResult.redirecting")}
                     </p>
                     <p className="text-sm text-muted-foreground">
-                        If you are not redirected, click{" "}
+                        {t("paymentResult.manualRedirect")}{" "}
                         <button
                             className="text-blue-600 underline"
                             onClick={() => navigate("/")}
                         >
-                            here
+                            {t("paymentResult.here")}
                         </button>{" "}
-                        to go to the homepage.
+                        {t("paymentResult.toHomepage")}
                     </p>
                 </CardContent>
             </Card>

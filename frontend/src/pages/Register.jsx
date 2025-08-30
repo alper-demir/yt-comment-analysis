@@ -10,8 +10,10 @@ import { Link, useNavigate } from "react-router"
 import { Layers } from 'lucide-react';
 import toast from "react-hot-toast"
 import PasswordInput from "../components/PasswordInput"
+import { useTranslation, Trans } from "react-i18next"
 
 const Register = () => {
+    const { t } = useTranslation()
 
     const [firstName, setFirstName] = useState("")
     const [lastName, setLastName] = useState("")
@@ -31,15 +33,15 @@ const Register = () => {
 
     const handleRegister = async () => {
         if (!mailRegex(email)) {
-            toast.error("Please enter a valid email address.")
+            toast.error(t("register.errors.invalidEmail"))
             return;
         }
         if (!passwordRegex(password)) {
-            toast.error("Password must be at least 8 characters, contain at least 1 letter and 1 number.")
+            toast.error(t("register.errors.invalidPassword"))
             return;
         }
         if (!acceptedTerms) {
-            toast.error("You must accept the terms and privacy policy to continue.")
+            toast.error(t("register.errors.acceptTerms"))
             return;
         }
 
@@ -65,58 +67,58 @@ const Register = () => {
             <Card className="w-full max-w-md shadow-lg rounded-2xl">
                 <CardHeader className="text-center">
                     <Layers className="mx-auto" />
-                    <CardTitle className="mt-4 text-2xl font-bold tracking-tight">Create your account</CardTitle>
+                    <CardTitle className="mt-4 text-2xl font-bold tracking-tight">
+                        {t("register.title")}
+                    </CardTitle>
                 </CardHeader>
 
                 <CardContent className="space-y-4">
-                    {/* First + Last Name */}
+
                     <div className="flex gap-4">
                         <div className="flex-1 space-y-2">
-                            <Label htmlFor="firstName">First Name</Label>
+                            <Label htmlFor="firstName">{t("register.firstName")}</Label>
                             <Input
                                 id="firstName"
                                 type="text"
-                                placeholder="John"
+                                placeholder={t("register.placeholders.firstName")}
                                 value={firstName}
                                 onChange={(e) => setFirstName(e.target.value)}
                             />
                         </div>
                         <div className="flex-1 space-y-2">
-                            <Label htmlFor="lastName">Last Name</Label>
+                            <Label htmlFor="lastName">{t("register.lastName")}</Label>
                             <Input
                                 id="lastName"
                                 type="text"
-                                placeholder="Doe"
+                                placeholder={t("register.placeholders.lastName")}
                                 value={lastName}
                                 onChange={(e) => setLastName(e.target.value)}
                             />
                         </div>
                     </div>
 
-                    {/* Email */}
                     <div className="space-y-2">
-                        <Label htmlFor="email">Email</Label>
+                        <Label htmlFor="email">{t("register.email")}</Label>
                         <Input
                             id="email"
                             type="email"
-                            placeholder="you@example.com"
+                            placeholder={t("register.placeholders.email")}
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                         />
                     </div>
 
-                    {/* Password */}
                     <div className="space-y-2">
-                        <Label htmlFor="password">Password</Label>
+                        <Label htmlFor="password">{t("register.password")}</Label>
                         <PasswordInput
                             id="newPassword"
                             type="password"
-                            placeholder="********"
+                            placeholder={t("register.placeholders.password")}
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                         />
                         <p className="mt-1 text-xs text-gray-500">
-                            At least 8 characters, 1 letter and 1 number
+                            {t("register.passwordHint")}
                         </p>
                     </div>
 
@@ -128,14 +130,13 @@ const Register = () => {
                             onCheckedChange={(val) => setAcceptedTerms(!!val)}
                         />
                         <Label htmlFor="terms" className="text-sm text-gray-600">
-                            I agree to the{" "}
-                            <a href="/terms" className="text-indigo-600 hover:underline" target="_blank">
-                                Terms
-                            </a>{" "}
-                            and{" "}
-                            <a href="/privacy" className="text-indigo-600 hover:underline" target="_blank">
-                                Privacy Policy
-                            </a>
+                            {/* Label gives gap-2 default, it gives blank spaces between tags, to solve this <Trans> wrapped with span tag */}
+                            <span className="">
+                                <Trans i18nKey="register.terms.fullText" components={{
+                                    1: <a href="/terms" className="text-indigo-600 hover:underline m-0" target="_blank" />,
+                                    2: <a href="/privacy" className="text-indigo-600 hover:underline m-0" target="_blank" />
+                                }} />
+                            </span>
                         </Label>
                     </div>
                 </CardContent>
@@ -149,22 +150,22 @@ const Register = () => {
                         {loading ? (
                             <div className="flex items-center gap-2">
                                 <LoadingSpinner size="sm" color="white" />
-                                <span>Registering...</span>
+                                <span>{t("register.loading")}</span>
                             </div>
                         ) : (
-                            "Register"
+                            t("register.button")
                         )}
                     </Button>
 
                     <p className="text-center text-sm text-gray-600">
-                        Already have an account?{" "}
+                        {t("register.alreadyAccount")}{" "}
                         <Link to="/login" className="font-medium text-indigo-600 hover:underline">
-                            Sign in
+                            {t("register.signIn")}
                         </Link>
                     </p>
                 </CardFooter>
             </Card>
-        </div>
+        </div >
     )
 }
 

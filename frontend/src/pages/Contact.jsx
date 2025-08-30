@@ -7,10 +7,13 @@ import { Mail } from "lucide-react";
 import { useState } from "react";
 import { toast } from 'react-hot-toast';
 import { createContactRecord } from "@/services/userService";
+import { useTranslation } from "react-i18next";
 
 const MAX_MESSAGE_LENGTH = 400;
 
 const ContactPage = () => {
+    const { t } = useTranslation();
+
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [subject, setSubject] = useState("");
@@ -20,22 +23,25 @@ const ContactPage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!name || !email || !subject || !message) toast.error("Please fill all the fields!");
+        if (!name || !email || !subject || !message) {
+            toast.error(t("contact.fillAllFields"));
+            return;
+        }
         if (!emailRegex.test(email)) {
-            toast.error("Please enter a valid email address");
+            toast.error(t("contact.invalidEmail"));
             return;
         }
         setIsSubmitting(true);
-        const res = await createContactRecord({ name, email, subject, message })
+        const res = await createContactRecord({ name, email, subject, message });
         const data = await res.json();
 
         if (!res.ok) {
             toast.error(data.message);
             setIsSubmitting(false);
             return;
-        };
+        }
 
-        toast.success("Your message has been sent!");
+        toast.success(t("contact.successMessage"));
         setName("");
         setEmail("");
         setSubject("");
@@ -47,47 +53,46 @@ const ContactPage = () => {
         <div className="max-h-screen flex flex-col items-center justify-center px-4 py-16 space-y-8">
             <Card className="w-full max-w-lg shadow-lg rounded-2xl">
                 <CardHeader>
-                    <CardTitle className="text-2xl font-bold text-center">Contact Us</CardTitle>
+                    <CardTitle className="text-2xl font-bold text-center">{t("contact.title")}</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <form className="space-y-4" onSubmit={handleSubmit}>
                         <div className="flex flex-col gap-y-2">
-                            <Label htmlFor="name">Name</Label>
+                            <Label htmlFor="name">{t("contact.name")}</Label>
                             <Input
                                 id="name"
-                                placeholder="Your name"
+                                placeholder={t("contact.namePlaceholder")}
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 required
                             />
                         </div>
                         <div className="flex flex-col gap-y-2">
-                            <Label htmlFor="email">Email</Label>
+                            <Label htmlFor="email">{t("contact.email")}</Label>
                             <Input
                                 id="email"
                                 type="email"
-                                placeholder="Your email"
+                                placeholder={t("contact.emailPlaceholder")}
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 required
                             />
                         </div>
                         <div className="flex flex-col gap-y-2">
-                            <Label htmlFor="subject">Subject</Label>
+                            <Label htmlFor="subject">{t("contact.subject")}</Label>
                             <Input
                                 id="subject"
-                                type="subject"
-                                placeholder="Subject"
+                                placeholder={t("contact.subjectPlaceholder")}
                                 value={subject}
                                 onChange={(e) => setSubject(e.target.value)}
                                 required
                             />
                         </div>
                         <div className="flex flex-col gap-y-2">
-                            <Label htmlFor="message">Message</Label>
+                            <Label htmlFor="message">{t("contact.message")}</Label>
                             <Textarea
                                 id="message"
-                                placeholder="Your message"
+                                placeholder={t("contact.messagePlaceholder")}
                                 value={message}
                                 onChange={(e) =>
                                     e.target.value.length <= MAX_MESSAGE_LENGTH &&
@@ -97,11 +102,11 @@ const ContactPage = () => {
                                 className="h-32 max-h-48"
                             />
                             <p className="text-xs text-gray-500 dark:text-gray-400 text-right">
-                                {message.length}/{MAX_MESSAGE_LENGTH} characters
+                                {message.length}/{MAX_MESSAGE_LENGTH} {t("contact.characters")}
                             </p>
                         </div>
                         <Button type="submit" className="w-full" disabled={isSubmitting}>
-                            {isSubmitting ? "Sending..." : "Send Message"}
+                            {isSubmitting ? t("contact.sending") : t("contact.sendButton")}
                         </Button>
                     </form>
                 </CardContent>

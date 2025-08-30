@@ -1,68 +1,41 @@
 import {
-    Home,
-    Search,
-    DollarSign,
-    Mail,
-    LogIn,
-    LayoutDashboard,
-    PlusCircle,
-    History,
-    BarChart,
-    FileText,
-    Key,
-    ChevronUp,
-    Circle,
-    LogOut,
-    Settings,
-    Receipt,
-    CircleUserRound
+    Home, Search, DollarSign, Mail, LogIn, LayoutDashboard, PlusCircle, History, BarChart,
+    FileText, Key, ChevronUp, Circle, LogOut, Settings, Receipt, CircleUserRound
 } from "lucide-react";
 
 import {
-    Sidebar,
-    SidebarContent,
-    SidebarGroup,
-    SidebarGroupContent,
-    SidebarGroupLabel,
-    SidebarMenu,
-    SidebarMenuButton,
-    SidebarMenuItem,
-    SidebarFooter
+    Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent,
+    SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarFooter
 } from "@/components/ui/sidebar";
 
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger
-} from "./ui/dropdown-menu";
-
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router";
 import { logout } from "../services/authService";
+import { useTranslation } from "react-i18next";
 
 const publicItems = [
-    { title: "Home", url: "/", icon: Home },
-    { title: "Features", url: "/features", icon: Search },
-    { title: "Pricing", url: "/pricing", icon: DollarSign },
-    { title: "Contact", url: "/contact", icon: Mail },
-    { title: "Login", url: "/login", icon: LogIn }
+    { key: "home", url: "/", icon: Home },
+    { key: "features", url: "/features", icon: Search },
+    { key: "pricing", url: "/pricing", icon: DollarSign },
+    { key: "contact", url: "/contact", icon: Mail },
+    { key: "login", url: "/login", icon: LogIn }
 ];
 
 const privateItems = [
-    { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
-    { title: "New Analysis", url: "/", icon: PlusCircle },
-    { title: "History", url: "/history", icon: History },
-    { title: "Statistics", url: "/statistics", icon: BarChart },
-    { title: "Saved Reports", url: "/reports", icon: FileText },
-    { title: "API Access", url: "/api-access", icon: Key }
+    { key: "dashboard", url: "/dashboard", icon: LayoutDashboard },
+    { key: "newAnalysis", url: "/", icon: PlusCircle },
+    { key: "history", url: "/history", icon: History },
+    { key: "statistics", url: "/statistics", icon: BarChart },
+    { key: "savedReports", url: "/reports", icon: FileText },
+    //{ key: "apiAccess", url: "/api-access", icon: Key }
 ];
 
 const dropdownItems = [
-    { title: "Account", url: "/account", icon: CircleUserRound },
-    { title: "Billing", url: "/billing", icon: Receipt },
-    { title: "Settings", url: "/settings", icon: Settings },
-    { title: "Signout", url: "/#", onclick: logout, icon: LogOut }
+    { key: "account", url: "/account", icon: CircleUserRound },
+    { key: "billing", url: "/billing", icon: Receipt },
+    { key: "settings", url: "/settings", icon: Settings },
+    { key: "signout", url: "/#", onclick: logout, icon: LogOut }
 ];
 
 const capitalizeFullName = (fullName) => {
@@ -78,6 +51,7 @@ export function AppSidebar() {
     const { user } = useSelector((state) => state.user);
     const fullName = user?.firstName + " " + user?.lastName
     const location = useLocation();
+    const { t } = useTranslation();
 
     const items = isAuthenticated
         ? [...privateItems]
@@ -87,7 +61,7 @@ export function AppSidebar() {
         <Sidebar collapsible="icon">
             <SidebarContent>
                 <SidebarGroup>
-                    <SidebarGroupLabel>YouTube Comment Analysis</SidebarGroupLabel>
+                    <SidebarGroupLabel>{t('sidebar.brand')}</SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu>
                             {items.map((item) => {
@@ -104,7 +78,12 @@ export function AppSidebar() {
                                                 }
                                             >
                                                 <item.icon />
-                                                <span>{item.title}</span>
+                                                <span>
+                                                    {t(
+                                                        `sidebar.${isAuthenticated ? "private" : "public"}.${item.key
+                                                        }`
+                                                    )}
+                                                </span>
                                             </Link>
                                         </SidebarMenuButton>
                                     </SidebarMenuItem>
@@ -133,9 +112,11 @@ export function AppSidebar() {
                                     {dropdownItems.map((item, index) => (
                                         <DropdownMenuItem key={index} onClick={item.onclick} asChild>
                                             {item.url ? (
-                                                <Link to={item.url} className="cursor-pointer"> <item.icon /> {item.title}</Link>
+                                                <Link to={item.url} className="cursor-pointer"> <item.icon />
+                                                    <span>{t(`sidebar.dropdown.${item.key}`)}</span>
+                                                </Link>
                                             ) : (
-                                                <span>{item.title}</span>
+                                                <span>{t(`sidebar.dropdown.${item.key}`)}</span>
                                             )}
                                         </DropdownMenuItem>
                                     ))}

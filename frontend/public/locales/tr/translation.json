@@ -1,0 +1,310 @@
+{
+    "sidebar": {
+        "public": {
+            "home": "Ana Sayfa",
+            "features": "Özellikler",
+            "pricing": "Fiyatlandırma",
+            "contact": "İletişim",
+            "login": "Giriş Yap"
+        },
+        "private": {
+            "dashboard": "Kontrol Paneli",
+            "newAnalysis": "Yeni Analiz",
+            "history": "Geçmiş",
+            "statistics": "İstatistikler",
+            "savedReports": "Kayıtlı Raporlar",
+            "apiAccess": "API Erişimi"
+        },
+        "dropdown": {
+            "account": "Hesap",
+            "billing": "Faturalandırma",
+            "settings": "Ayarlar",
+            "signout": "Çıkış Yap"
+        },
+        "brand": "YtLens"
+    },
+    "settings": {
+        "title": "Ayarlar",
+        "theme": {
+            "label": "Tema",
+            "description": "Görünüm modunu seçin",
+            "placeholder": "Tema seçin",
+            "options": {
+                "light": "Açık",
+                "dark": "Koyu",
+                "system": "Sistem"
+            }
+        },
+        "language": {
+            "label": "Dil",
+            "description": "Tercih ettiğiniz dili seçin",
+            "placeholder": "Dil seçin",
+            "options": {
+                "tr-TR": "Türkçe",
+                "en-US": "İngilizce"
+            }
+        },
+        "notifications": {
+            "label": "E-posta Bildirimleri",
+            "description": "Güncellemeleri e-posta ile alın"
+        }
+    },
+    "dashboard": {
+        "summaryCards": {
+            "totalAnalyses": "Toplam Analiz",
+            "totalComments": "Toplam Yorum",
+            "tokenUsage": "Token Kullanımı",
+            "remainingTokens": "Kalan Token",
+            "lastAnalysis": "Son Analiz",
+            "buyTokens": "Token Satın Al"
+        },
+        "summaryTooltips": {
+            "totalAnalyses": "Yapılan toplam analiz sayısını gösterir.",
+            "totalComments": "Tüm analizlerde işlenen toplam yorum sayısını gösterir.",
+            "tokenUsage": "Harcanan toplam token sayısını gösterir.",
+            "remainingTokens": "Kullanıcının mevcut bakiye token sayısını gösterir."
+        },
+        "sentiment": {
+            "positive": "Pozitif",
+            "negative": "Negatif",
+            "neutral": "Nötr"
+        },
+        "lastAnalysesTable": {
+            "title": "Son Analizler",
+            "caption": "Son {{count}} analiz.",
+            "columns": {
+                "video": "Video",
+                "positive": "Pozitif",
+                "negative": "Negatif",
+                "neutral": "Nötr",
+                "totalComments": "Toplam Yorum",
+                "totalTokens": "Toplam Token",
+                "date": "Tarih"
+            },
+            "seeDetail": "Detayı Gör"
+        }
+    },
+    "home": {
+        "title": "YouTube Yorum Analizi",
+        "description": "Bir YouTube video bağlantısı girin, yorumları analiz edelim!",
+        "videoLabel": "Video Bağlantısı",
+        "videoPlaceholder": "https://www.youtube.com/watch?v=...",
+        "analyzeButton": "Analiz Et",
+        "analyzing": "Analiz ediliyor...",
+        "errors": {
+            "invalidUrl": "Lütfen geçerli bir YouTube video bağlantısı girin."
+        },
+        "success": {
+            "analysisCompleted": "Analiz tamamlandı!"
+        }
+    },
+    "analysis": {
+        "results": "Analiz Sonuçları",
+        "trialAccess": "Deneme Erişimi",
+        "trialAccessTooltip": "Token harcanmadı. Deneme erişimi kapsamında sağlanmıştır.",
+        "sentimentDistribution": "Duygu Dağılımı",
+        "positive": "Olumlu",
+        "negative": "Olumsuz",
+        "neutral": "Nötr",
+        "inputTokens": "Girdi Tokenleri",
+        "outputTokens": "Çıktı Tokenleri",
+        "totalTokens": "Toplam Tokenler",
+        "likedSummary": "Beğenilen Özet",
+        "dislikedSummary": "Beğenilmeyen Özet",
+        "noData": "Veri Yok"
+    },
+    "analysisDetail": {
+        "title": "Analiz Detayı",
+        "noAnalysis": "Analiz bulunamadı.",
+        "fetchError": "Analiz alınamadı.",
+        "generalError": "Bir hata oluştu."
+    },
+    "error": {
+        "title": "Hata! Bir şeyler ters gitti",
+        "message1": "Aradığınız sayfa mevcut değil veya beklenmeyen bir hata oluştu.",
+        "message2": "Ana sayfaya dönebilir veya URL'nizi kontrol edebilirsiniz.",
+        "home": "Ana Sayfaya Git",
+        "back": "Geri Git"
+    },
+    "account": {
+        "title": "Hesap Ayarları",
+        "errors": {
+            "nameRequired": "Ad ve soyad gereklidir!",
+            "allFieldsRequired": "Tüm alanlar doldurulmalıdır",
+            "passwordInvalid": "Şifre en az 8 karakter olmalı, en az 1 harf ve 1 sayı içermelidir.",
+            "passwordMismatch": "Şifreler eşleşmiyor",
+            "passwordUpdateFailed": "Şifre güncellenemedi: ",
+            "loadFailed": "Kullanıcı bilgileri yüklenemedi: "
+        },
+        "success": {
+            "profileUpdated": "Profil güncellendi!",
+            "passwordUpdated": "Şifre güncellendi!"
+        },
+        "profile": {
+            "title": "Profil Bilgileri",
+            "tooltip": "Kişisel bilgilerinizi ve tercihlerinizi güncelleyin.",
+            "firstName": "Ad",
+            "lastName": "Soyad",
+            "email": "E-posta",
+            "save": "Profili Kaydet",
+            "status": "Durum",
+            "verified": "Doğrulandı",
+            "unverified": "Doğrulanmadı"
+        },
+        "security": {
+            "title": "Güvenlik",
+            "tooltip": "Hesabınızı güvenli tutmak için şifrenizi değiştirin.",
+            "currentPassword": "Mevcut Şifre",
+            "newPassword": "Yeni Şifre",
+            "confirmPassword": "Yeni Şifreyi Onayla",
+            "changePassword": "Şifreyi Değiştir"
+        }
+    },
+    "analysisHistory": {
+        "noRecords": "Hiç analiz kaydı yok.",
+        "caption": "Video analizlerinizin listesi.",
+        "showing": "Gösterilen",
+        "of": "toplam",
+        "video": "Video",
+        "positive": "Pozitif",
+        "negative": "Negatif",
+        "neutral": "Nötr",
+        "total": "Toplam",
+        "date": "Tarih",
+        "tokenUsage": "Token Kullanımı",
+        "view": "Görüntüle",
+        "pagination": {
+            "previous": "Önceki",
+            "next": "Sonraki"
+        }
+    },
+    "contact": {
+        "title": "Bize Ulaşın",
+        "name": "İsim",
+        "namePlaceholder": "Adınız",
+        "email": "E-posta",
+        "emailPlaceholder": "E-posta adresiniz",
+        "subject": "Konu",
+        "subjectPlaceholder": "Konu",
+        "message": "Mesaj",
+        "messagePlaceholder": "Mesajınız",
+        "characters": "karakter",
+        "fillAllFields": "Lütfen tüm alanları doldurun!",
+        "invalidEmail": "Lütfen geçerli bir e-posta adresi girin",
+        "successMessage": "Mesajınız gönderildi!",
+        "sending": "Gönderiliyor...",
+        "sendButton": "Mesaj Gönder"
+    },
+    "billing": {
+        "title": "Faturalama",
+        "tabs": {
+            "overview": "Genel Bakış",
+            "history": "Ödeme Geçmişi"
+        },
+        "overview": {
+            "remainingTokens": "Kalan Token",
+            "tokens": "Token",
+            "price": "Fiyat",
+            "buyButton": "Satın Al"
+        },
+        "pagination": {
+            "previous": "Önceki",
+            "next": "Sonraki"
+        },
+        "history": {
+            "date": "Tarih",
+            "plan": "Plan",
+            "token": "Token",
+            "price": "Fiyat",
+            "status": "Durum",
+            "view": "Görüntüle",
+            "noPayments": "Henüz ödeme yapılmadı.",
+            "list": "Ödeme geçmişinizin listesi. ",
+            "shown": "Gösterilen {{from}}-{{to}} / {{total}}",
+            "statuses": {
+                "success": "Başarılı",
+                "failure": "Başarısız",
+                "pending": "Beklemede"
+            },
+            "fetchError": "Ödeme geçmişi alınamadı"
+        }
+    },
+    "checkout": {
+        "title": "Ödeme",
+        "subtitle": "Ödeme yapmadan önce planınızı gözden geçirin veya başka bir plan seçin.",
+        "tokens": "Token",
+        "defaultDescription": "Esnek token paketi.",
+        "selectedPlan": "Seçilen Plan",
+        "proceed": "Ödemeye Geç",
+        "redirecting": "Yönlendiriliyor...",
+        "errors": {
+            "loadPlans": "Planlar yüklenemedi",
+            "noPlan": "Lütfen önce bir plan seçin",
+            "checkoutFailed": "Ödeme işlemi başarısız oldu"
+        }
+    },
+    "paymentResult": {
+        "title": "Ödeme {{status}}",
+        "description": "Plan {{planId}} için ödemeniz:",
+        "status": {
+            "success": "Başarılı",
+            "fail": "Başarısız",
+            "pending": "Beklemede",
+            "unknown": "Bilinmiyor"
+        },
+        "redirecting": "Kısa süre içinde yönlendirileceksiniz...",
+        "manualRedirect": "Eğer yönlendirilmezseniz,",
+        "here": "buraya",
+        "toHomepage": "tıklayarak ana sayfaya gidebilirsiniz."
+    },
+    "register": {
+        "title": "Hesap oluştur",
+        "firstName": "Ad",
+        "lastName": "Soyad",
+        "email": "E-posta",
+        "password": "Şifre",
+        "button": "Kayıt ol",
+        "loading": "Kayıt yapılıyor...",
+        "signIn": "Giriş yap",
+        "alreadyAccount": "Zaten bir hesabın var mı?",
+        "passwordHint": "En az 8 karakter, 1 harf ve 1 rakam içermeli",
+        "placeholders": {
+            "firstName": "John",
+            "lastName": "Doe",
+            "email": "you@example.com",
+            "password": "********"
+        },
+        "terms": {
+            "fullText": "<1>Koşullar</1> ve <2>Gizlilik Politikası</2>'nı okudum, kabul ediyorum."
+        },
+        "errors": {
+            "invalidEmail": "Lütfen geçerli bir e-posta adresi girin.",
+            "invalidPassword": "Şifre en az 8 karakter olmalı, 1 harf ve 1 rakam içermeli.",
+            "acceptTerms": "Devam etmek için şartları ve gizlilik politikasını kabul etmelisiniz."
+        }
+    },
+    "login": {
+        "title": "Giriş Yap",
+        "description": "Devam etmek için hesabınıza erişin",
+        "email": "E-posta adresi",
+        "password": "Şifre",
+        "forgotPassword": "Şifremi unuttum?",
+        "submit": "Giriş Yap",
+        "noAccount": "Hesabınız yok mu? <1>Kayıt Ol</1>",
+        "signUp": "Kayıt Ol",
+        "loginSuccess": "Giriş başarılı!",
+        "loginFailed": "Giriş başarısız",
+        "somethingWentWrong": "Bir hata oluştu"
+    },
+    "verifyAccount": {
+        "verifying": "Hesabınız doğrulanıyor..."
+    },
+    "pricing": {
+        "title": "Fiyat Planları",
+        "subtitle": "İhtiyacınıza uygun token paketini seçin. Sadece kullandığınız kadar ödeyin.",
+        "descriptionDefault": "Esnek analiz kullanımı için token paketi.",
+        "buyNow": "Şimdi Satın Al",
+        "price": "{{price}} {{currency}}",
+        "token": "Token"
+    }
+}

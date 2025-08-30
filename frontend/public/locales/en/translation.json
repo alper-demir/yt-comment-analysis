@@ -1,0 +1,310 @@
+{
+    "sidebar": {
+        "public": {
+            "home": "Home",
+            "features": "Features",
+            "pricing": "Pricing",
+            "contact": "Contact",
+            "login": "Login"
+        },
+        "private": {
+            "dashboard": "Dashboard",
+            "newAnalysis": "New Analysis",
+            "history": "History",
+            "statistics": "Statistics",
+            "savedReports": "Saved Reports",
+            "apiAccess": "API Access"
+        },
+        "dropdown": {
+            "account": "Account",
+            "billing": "Billing",
+            "settings": "Settings",
+            "signout": "Sign out"
+        },
+        "brand": "YtLens"
+    },
+    "settings": {
+        "title": "Settings",
+        "theme": {
+            "label": "Theme",
+            "description": "Choose your appearance mode",
+            "placeholder": "Select theme",
+            "options": {
+                "light": "Light",
+                "dark": "Dark",
+                "system": "System"
+            }
+        },
+        "language": {
+            "label": "Language",
+            "description": "Select your preferred language",
+            "placeholder": "Select language",
+            "options": {
+                "tr-TR": "Türkçe",
+                "en-US": "English"
+            }
+        },
+        "notifications": {
+            "label": "Email Notifications",
+            "description": "Receive updates via email"
+        }
+    },
+    "dashboard": {
+        "summaryCards": {
+            "totalAnalyses": "Total Analyses",
+            "totalComments": "Total Comments",
+            "tokenUsage": "Token Usage",
+            "remainingTokens": "Remaining Tokens",
+            "lastAnalysis": "Last Analysis",
+            "buyTokens": "Buy Tokens"
+        },
+        "summaryTooltips": {
+            "totalAnalyses": "Represents the total number of analyses performed.",
+            "totalComments": "Represents the total number of comments processed across all analyses.",
+            "tokenUsage": "Shows the total number of tokens consumed, representing the API transaction units spent across all comment analyses.",
+            "remainingTokens": "Indicates the number of tokens currently available in the user’s balance."
+        },
+        "sentiment": {
+            "positive": "Positive",
+            "negative": "Negative",
+            "neutral": "Neutral"
+        },
+        "lastAnalysesTable": {
+            "title": "Last Analyses",
+            "caption": "Last {{count}} analysis.",
+            "columns": {
+                "video": "Video",
+                "positive": "Positive",
+                "negative": "Negative",
+                "neutral": "Neutral",
+                "totalComments": "Total Comments",
+                "totalTokens": "Total Tokens",
+                "date": "Date"
+            },
+            "seeDetail": "See Detail"
+        }
+    },
+    "home": {
+        "title": "YouTube Comment Analysis",
+        "description": "Provide a YouTube video link and we'll analyze the comments!",
+        "videoLabel": "Video Link",
+        "videoPlaceholder": "https://www.youtube.com/watch?v=...",
+        "analyzeButton": "Analyze",
+        "analyzing": "Analyzing...",
+        "errors": {
+            "invalidUrl": "Please provide a valid YouTube video link."
+        },
+        "success": {
+            "analysisCompleted": "Analysis completed!"
+        }
+    },
+    "analysis": {
+        "results": "Analysis Results",
+        "trialAccess": "Trial Access",
+        "trialAccessTooltip": "No tokens were consumed. Provided as part of trial access.",
+        "sentimentDistribution": "Sentiment Distribution",
+        "positive": "Positive",
+        "negative": "Negative",
+        "neutral": "Neutral",
+        "inputTokens": "Input Tokens",
+        "outputTokens": "Output Tokens",
+        "totalTokens": "Total Tokens",
+        "likedSummary": "Liked Summary",
+        "dislikedSummary": "Disliked Summary",
+        "noData": "No Data"
+    },
+    "analysisDetail": {
+        "title": "Analysis Detail",
+        "noAnalysis": "No analysis found.",
+        "fetchError": "Failed to fetch analysis.",
+        "generalError": "Something went wrong."
+    },
+    "error": {
+        "title": "Oops! Something went wrong",
+        "message1": "The page you are looking for does not exist, or an unexpected error occurred.",
+        "message2": "You can return to the homepage or check your URL.",
+        "home": "Go to Home",
+        "back": "Go Back"
+    },
+    "account": {
+        "title": "Account Settings",
+        "errors": {
+            "nameRequired": "First name and last name are required!",
+            "allFieldsRequired": "All fields are required",
+            "passwordInvalid": "Password must be at least 8 characters, contain at least 1 letter and 1 number.",
+            "passwordMismatch": "Passwords do not match",
+            "passwordUpdateFailed": "Failed to update password: ",
+            "loadFailed": "Failed to load user info: "
+        },
+        "success": {
+            "profileUpdated": "Profile updated!",
+            "passwordUpdated": "Password updated!"
+        },
+        "profile": {
+            "title": "Profile Information",
+            "tooltip": "Update your personal information and preferences.",
+            "firstName": "First Name",
+            "lastName": "Last Name",
+            "email": "Email",
+            "save": "Save Profile",
+            "status": "Status",
+            "verified": "Verified",
+            "unverified": "Unverified"
+        },
+        "security": {
+            "title": "Security",
+            "tooltip": "Change your password to keep your account secure.",
+            "currentPassword": "Current Password",
+            "newPassword": "New Password",
+            "confirmPassword": "Confirm New Password",
+            "changePassword": "Change Password"
+        }
+    },
+    "analysisHistory": {
+        "noRecords": "There is no analysis record.",
+        "caption": "A list of your video analyses.",
+        "showing": "Shown",
+        "of": "of",
+        "video": "Video",
+        "positive": "Positive",
+        "negative": "Negative",
+        "neutral": "Neutral",
+        "total": "Total",
+        "date": "Date",
+        "tokenUsage": "Token Usage",
+        "view": "View",
+        "pagination": {
+            "previous": "Previous",
+            "next": "Next"
+        }
+    },
+    "contact": {
+        "title": "Contact Us",
+        "name": "Name",
+        "namePlaceholder": "Your name",
+        "email": "Email",
+        "emailPlaceholder": "Your email",
+        "subject": "Subject",
+        "subjectPlaceholder": "Subject",
+        "message": "Message",
+        "messagePlaceholder": "Your message",
+        "characters": "characters",
+        "fillAllFields": "Please fill all the fields!",
+        "invalidEmail": "Please enter a valid email address",
+        "successMessage": "Your message has been sent!",
+        "sending": "Sending...",
+        "sendButton": "Send Message"
+    },
+    "billing": {
+        "title": "Billing",
+        "tabs": {
+            "overview": "Overview",
+            "history": "Payment History"
+        },
+        "overview": {
+            "remainingTokens": "Remaining Tokens",
+            "tokens": "Tokens",
+            "price": "Price",
+            "buyButton": "Buy"
+        },
+        "pagination": {
+            "previous": "Previous",
+            "next": "Next"
+        },
+        "history": {
+            "date": "Date",
+            "plan": "Plan",
+            "token": "Token",
+            "price": "Price",
+            "status": "Status",
+            "view": "View",
+            "noPayments": "No payments yet.",
+            "list": "A list of your payments. ",
+            "shown": "Shown {{from}}-{{to}} of {{total}}",
+            "statuses": {
+                "success": "Success",
+                "failure": "Failure",
+                "pending": "Pending"
+            },
+            "fetchError": "Failed to fetch payment history"
+        }
+    },
+    "checkout": {
+        "title": "Checkout",
+        "subtitle": "Review your plan or choose another one before proceeding to payment.",
+        "tokens": "Tokens",
+        "defaultDescription": "Flexible token package.",
+        "selectedPlan": "Selected Plan",
+        "proceed": "Proceed to Payment",
+        "redirecting": "Redirecting...",
+        "errors": {
+            "loadPlans": "Failed to load plans",
+            "noPlan": "Please select a plan first",
+            "checkoutFailed": "Checkout failed"
+        }
+    },
+    "paymentResult": {
+        "title": "Payment {{status}}",
+        "description": "Your payment for plan {{planId}} is:",
+        "status": {
+            "success": "Success",
+            "fail": "Failed",
+            "pending": "Pending",
+            "unknown": "Unknown"
+        },
+        "redirecting": "You will be redirected shortly...",
+        "manualRedirect": "If you are not redirected, click",
+        "here": "here",
+        "toHomepage": "to go to the homepage."
+    },
+    "register": {
+        "title": "Create your account",
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "email": "Email",
+        "password": "Password",
+        "button": "Register",
+        "loading": "Registering...",
+        "signIn": "Sign in",
+        "alreadyAccount": "Already have an account?",
+        "passwordHint": "At least 8 characters, 1 letter and 1 number",
+        "placeholders": {
+            "firstName": "John",
+            "lastName": "Doe",
+            "email": "you@example.com",
+            "password": "********"
+        },
+        "terms": {
+            "fullText": "I agree to the <1>Terms</1> and <2>Privacy Policy</2>."
+        },
+        "errors": {
+            "invalidEmail": "Please enter a valid email address.",
+            "invalidPassword": "Password must be at least 8 characters, contain at least 1 letter and 1 number.",
+            "acceptTerms": "You must accept the terms and privacy policy to continue."
+        }
+    },
+    "login": {
+        "title": "Sign in",
+        "description": "Access your account to continue",
+        "email": "Email address",
+        "password": "Password",
+        "forgotPassword": "Forgot password?",
+        "submit": "Sign in",
+        "noAccount": "Don't have an account? <1>Sign up</1>",
+        "signUp": "Sign up",
+        "loginSuccess": "Login successful!",
+        "loginFailed": "Login failed",
+        "somethingWentWrong": "Something went wrong"
+    },
+    "verifyAccount": {
+        "verifying": "Account is being verified..."
+    },
+    "pricing": {
+        "title": "Pricing Plans",
+        "subtitle": "Choose the right token package for your needs. Pay only for what you use.",
+        "descriptionDefault": "Token package for flexible analysis usage.",
+        "buyNow": "Buy Now",
+        "price": "{{price}} {{currency}}",
+        "token": "Tokens"
+    }
+}

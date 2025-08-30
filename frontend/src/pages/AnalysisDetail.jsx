@@ -4,18 +4,22 @@ import { getOneAnalyze } from "@/services/analizeService";
 import AnalizeResult from "@/components/AnalizeResult";
 import { toast } from "react-hot-toast";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import { useTranslation } from "react-i18next";
 
 const AnalysisDetail = () => {
+
+    const { t } = useTranslation();
     const { id } = useParams();
     const [analysis, setAnalysis] = useState(null);
     const [loading, setLoading] = useState(true);
+
     useEffect(() => {
         const fetchAnalysis = async () => {
             try {
                 const res = await getOneAnalyze(id);
                 if (!res.ok) {
                     const errorData = await res.json();
-                    toast.error(errorData.message || "Failed to fetch analysis");
+                    toast.error(errorData.message || t("analysisDetail.fetchError"));
                     setLoading(false);
                     return;
                 }
@@ -26,7 +30,7 @@ const AnalysisDetail = () => {
                 setLoading(false);
             } catch (error) {
                 console.error(error);
-                toast.error("Something went wrong");
+                toast.error(t("analysisDetail.generalError"));
                 setLoading(false);
             }
         };
@@ -37,15 +41,13 @@ const AnalysisDetail = () => {
     if (loading) return <LoadingSpinner />;
 
     if (!analysis) {
-        return <p className="text-center text-muted-foreground">No analysis found.</p>;
+        return <p className="text-center text-muted-foreground">{t("analysisDetail.noAnalysis")}</p>;
     }
 
     return (
         <div className="container mx-auto py-6">
-            <h1 className="text-2xl font-bold mb-6 text-center">Analysis Detail</h1>
-            <AnalizeResult
-                analysis={analysis}
-            />
+            <h1 className="text-2xl font-bold mb-6 text-center">{t("analysisDetail.title")}</h1>
+            <AnalizeResult analysis={analysis} />
         </div>
     );
 };

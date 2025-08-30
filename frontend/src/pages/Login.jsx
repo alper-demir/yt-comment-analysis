@@ -11,14 +11,15 @@ import { toast } from "react-hot-toast";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { Layers } from 'lucide-react';
 import PasswordInput from "../components/PasswordInput";
+import { useTranslation, Trans } from "react-i18next";
 
 const Login = () => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-
     const [loading, setLoading] = useState(true);
     const [submitting, setSubmitting] = useState(false);
 
@@ -31,12 +32,12 @@ const Login = () => {
                 dispatch(setUser(data.user));
                 localStorage.setItem("token", data.token);
                 navigate("/");
-                toast.success("Login successful!");
+                toast.success(t("login.loginSuccess"));
             } else {
-                toast.error(data.message || "Login failed");
+                toast.error(data.message || t("login.loginFailed"));
             }
         } catch (error) {
-            toast.error("Something went wrong");
+            toast.error(t("login.somethingWentWrong"));
             console.error("Login error:", error);
         } finally {
             setSubmitting(false);
@@ -66,13 +67,13 @@ const Login = () => {
             <Card className="w-full max-w-md shadow-lg border rounded-2xl">
                 <CardHeader>
                     <Layers className="mx-auto" />
-                    <CardTitle className="text-center text-2xl font-bold mt-4">Sign in</CardTitle>
-                    <CardDescription className="text-center">Access your account to continue</CardDescription>
+                    <CardTitle className="text-center text-2xl font-bold mt-4">{t("login.title")}</CardTitle>
+                    <CardDescription className="text-center">{t("login.description")}</CardDescription>
                 </CardHeader>
 
                 <CardContent className="space-y-6">
                     <div className="space-y-2">
-                        <Label htmlFor="email">Email address</Label>
+                        <Label htmlFor="email">{t("login.email")}</Label>
                         <Input
                             id="email"
                             type="email"
@@ -86,13 +87,13 @@ const Login = () => {
 
                     <div className="space-y-2">
                         <div className="flex items-center justify-between">
-                            <Label htmlFor="password">Password</Label>
+                            <Label htmlFor="password">{t("login.password")}</Label>
                             <button
                                 type="button"
                                 className="text-sm text-indigo-600 hover:underline"
-                                onClick={() => toast("Forgot password clicked")}
+                                onClick={() => toast(t("login.forgotPassword"))}
                             >
-                                Forgot password?
+                                {t("login.forgotPassword")}
                             </button>
                         </div>
                         <PasswordInput
@@ -110,18 +111,16 @@ const Login = () => {
                         disabled={submitting}
                         className="w-full cursor-pointer"
                     >
-                        {submitting ? <LoadingSpinner size="sm" /> : "Sign in"}
+                        {submitting ? <LoadingSpinner size="sm" /> : t("login.submit")}
                     </Button>
                 </CardContent>
 
                 <CardFooter className="flex justify-center text-sm text-gray-600">
                     <p className="text-center text-sm text-gray-600">
-                        Don't you have an account?{" "}
-                        <Link to="/register" className="font-medium text-indigo-600 hover:underline">
-                            Sign up
-                        </Link>
+                        <Trans i18nKey="login.noAccount" components={{ 1: <Link to="/register" className="font-medium text-indigo-600 hover:underline" /> }} />
                     </p>
                 </CardFooter>
+
             </Card>
         </div>
     );

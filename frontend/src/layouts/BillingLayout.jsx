@@ -1,16 +1,15 @@
 import { useNavigate, useLocation, Outlet } from "react-router";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useTranslation } from "react-i18next";
 
 const BillingLayout = () => {
     const location = useLocation();
     const navigate = useNavigate();
+    const { t } = useTranslation();
 
-    // route -> tab mapping
     const tabMap = {
         "/billing/overview": "overview",
         "/billing/history": "history",
-        // "/billing/plans": "plans",
-        // "/billing/payment-methods": "payment-methods",
     };
 
     const activeTab = tabMap[location.pathname] || "overview";
@@ -21,14 +20,12 @@ const BillingLayout = () => {
 
     return (
         <div className="p-4">
-            <h2 className="text-2xl font-bold mb-4">Billing</h2>
+            <h2 className="text-2xl font-bold mb-4">{t("billing.title")}</h2>
 
             <Tabs value={activeTab} onValueChange={handleTabChange}>
                 <TabsList className="mb-6">
-                    <TabsTrigger value="overview">Overview</TabsTrigger>
-                    <TabsTrigger value="history">Payment History</TabsTrigger>
-                    {/* <TabsTrigger value="plans">Plans</TabsTrigger>
-                    <TabsTrigger value="payment-methods">Payment Methods</TabsTrigger> */}
+                    <TabsTrigger value="overview">{t("billing.tabs.overview")}</TabsTrigger>
+                    <TabsTrigger value="history">{t("billing.tabs.history")}</TabsTrigger>
                 </TabsList>
                 <Outlet />
             </Tabs>
