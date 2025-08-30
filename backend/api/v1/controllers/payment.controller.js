@@ -144,12 +144,18 @@ export const paymentCallback = async (req, res) => {
     });
 };
 
-
 export const getPaymentHistory = async (req, res) => {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const offset = (page - 1) * limit;
+
     try {
-        const purchases = await Payment.findAll({
+        const purchases = await Payment.findAndCountAll({
             where: { userId: req.user.id, status: { [Op.in]: ['SUCCESS', 'FAILURE'] } },
-            order: [["createdAt", "DESC"]]
+            order: [["createdAt", "DESC"]],
+            offset,
+            limit,
+            include: { model: TokenPlan, attributes: ['name'] }
         });
 
         return res.json(purchases);

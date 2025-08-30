@@ -17,10 +17,10 @@ export const createCheckoutSession = async (data) => {
     }
 }
 
-export const getPaymentHistory = async () => {
+export const getPaymentHistory = async (page, limit) => {
     const token = localStorage.getItem("token");
     try {
-        const response = await fetch(`${BACKEND_URL}/payment-history`, {
+        const response = await fetch(`${BACKEND_URL}/payment-history?page=${page}&limit=${limit}`, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,

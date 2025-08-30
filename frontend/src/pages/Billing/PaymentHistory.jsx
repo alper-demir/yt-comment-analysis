@@ -1,18 +1,26 @@
-import { useEffect, useState } from "react";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useState, useEffect } from "react";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, TableFooter, TableCaption } from "@/components/ui/table";
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { getPaymentHistory } from '@/services/paymentService';
 import toast from "react-hot-toast";
 import { Button } from '@/components/ui/button';
 import { Skeleton } from "@/components/ui/skeleton";
+import { useSearchParams } from "react-router";
 
 const PaymentHistory = () => {
+
+    const limit = 10;
     const [payments, setPayments] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [page, setPage] = useState(1);
+    const [totalRecord, setTotalRecord] = useState(null);
+    const [searchParams, setSearchParams] = useSearchParams();
 
     const fetchPayments = async () => {
         setLoading(true);
         try {
-            const res = await getPaymentHistory();
+            const res = await getPaymentHistory(page, limit);
             const data = await res.json();
             console.log(data)
             if (!res.ok) {
@@ -20,8 +28,8 @@ const PaymentHistory = () => {
                 setLoading(false);
                 return;
             }
-
-            setPayments(data);
+            setTotalRecord(data.count);
+            setPayments(data.rows);
         } catch (err) {
             console.error(err);
             toast.error("Failed to fetch payment history");
@@ -31,8 +39,15 @@ const PaymentHistory = () => {
     };
 
     useEffect(() => {
+        const currentPage = parseInt(searchParams.get("page") || "1", 10);
+        setPage(currentPage);
+    }, [searchParams]);
+
+    useEffect(() => {
         fetchPayments();
-    }, []);
+    }, [page]);
+
+    const totalPages = Math.ceil(totalRecord / limit);
 
     if (loading) {
         return (
@@ -65,11 +80,26 @@ const PaymentHistory = () => {
 
     return (
         <Table>
+            <TableCaption>
+                {payments.length <= 0 ? (
+                    <>There is no payment record.</>
+                ) : (
+                    <>
+                        A list of your payments.
+                        {totalRecord && (
+                            <>
+                                {" Shown "}
+                                {((page - 1) * limit) + 1}-{Math.min(page * limit, totalRecord)} of {totalRecord}
+                            </>
+                        )}
+                    </>
+                )}
+            </TableCaption>
             <TableHeader>
                 <TableRow>
                     <TableHead>Date</TableHead>
                     <TableHead>Plan</TableHead>
-                    <TableHead>Amount</TableHead>
+                    <TableHead>Token</TableHead>
                     <TableHead>Price</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead></TableHead>
@@ -78,8 +108,19 @@ const PaymentHistory = () => {
             <TableBody>
                 {payments.map((payment) => (
                     <TableRow key={payment.id}>
-                        <TableCell>{new Date(payment.createdAt).toLocaleDateString()}</TableCell>
-                        <TableCell>{payment.plan?.tokens ? `${payment.plan.tokens} Tokens` : payment.planId}</TableCell>
+                        <TableCell>
+                            <TooltipProvider>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <span>{new Date(payment.createdAt).toLocaleDateString()}</span>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        {new Date(payment.createdAt).toLocaleString()}
+                                    </TooltipContent>
+                                </Tooltip>
+                            </TooltipProvider>
+                        </TableCell>
+                        <TableCell>{payment.TokenPlan.name ? `${payment.TokenPlan.name}` : payment.planId}</TableCell>
                         <TableCell>{payment.amount}</TableCell>
                         <TableCell>{`${payment.price} ${payment.currency}`}</TableCell>
                         <TableCell>
@@ -98,6 +139,55 @@ const PaymentHistory = () => {
                     </TableRow>
                 ))}
             </TableBody>
+
+            <TableFooter>
+                <TableRow>
+                    <TableCell colSpan={8}>
+                        <Pagination>
+                            <PaginationContent>
+                                <PaginationItem>
+                                    <PaginationPrevious
+                                        href={`?page=${page - 1}`}
+                                        aria-disabled={page <= 1}
+                                        className={page <= 1 ? "pointer-events-none opacity-50" : ""}
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            if (page > 1) setSearchParams({ page: page - 1 });
+                                        }}
+                                    />
+                                </PaginationItem>
+
+                                {Array.from({ length: totalPages }).map((_, i) => (
+                                    <PaginationItem key={i}>
+                                        <PaginationLink
+                                            href={`?page=${i + 1}`}
+                                            isActive={page === i + 1}
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                setSearchParams({ page: i + 1 });
+                                            }}
+                                        >
+                                            {i + 1}
+                                        </PaginationLink>
+                                    </PaginationItem>
+                                ))}
+
+                                <PaginationItem>
+                                    <PaginationNext
+                                        href={`?page=${page + 1}`}
+                                        aria-disabled={page >= totalPages}
+                                        className={page >= totalPages ? "pointer-events-none opacity-50" : ""}
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            if (page < totalPages) setSearchParams({ page: page + 1 });
+                                        }}
+                                    />
+                                </PaginationItem>
+                            </PaginationContent>
+                        </Pagination>
+                    </TableCell>
+                </TableRow>
+            </TableFooter>
         </Table>
     );
 };
