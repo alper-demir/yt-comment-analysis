@@ -7,6 +7,25 @@ import TrialAccess from "../models/trialAccess.model.js";
 const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
 const BACKEND_URL = process.env.BACKEND_URL;
 const FREE_LIMIT = 2; // Trial Access limit
+const DEFAULT_COMMENT_COUNT = 100;
+const MAX_COMMENT_COUNT = 300;
+const promptRaw = `
+                        You are a helpful assistant for sentiment analysis and summarization.
+                        Analyze the following user comments about a YouTube video. 
+                        Return a JSON object with counts of positive, negative, and neutral comments, 
+                        and write natural language summaries for what users liked and disliked.
+
+                        Comments:
+
+                        Respond in JSON format like this:
+                        {
+                        "positive": <number>,
+                        "negative": <number>,
+                        "neutral": <number>,
+                        "liked_summary": "<natural language summary of what users liked>",
+                        "disliked_summary": "<natural language summary of what users disliked>"
+                        }
+                        `;
 
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
@@ -14,17 +33,32 @@ const openai = new OpenAI({
 
 export const getComments = async (req, res) => {
     const { id } = req.params;
-    // const response = await fetch(`https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&videoId=${id}&maxResults=100&key=${YOUTUBE_API_KEY}`, {
-    //     method: "GET"
-    // });
+    let commentCount = parseInt(req.query.commentCount, 10) || DEFAULT_COMMENT_COUNT;
+    if (commentCount > MAX_COMMENT_COUNT) commentCount = MAX_COMMENT_COUNT;
+    if (commentCount < 1) commentCount = DEFAULT_COMMENT_COUNT;
+    let comments = [];
+    let pageToken = null;
 
-    // const data = await response.json();
-    // if (data.error) {
-    //     return res.status(data.error.code).json({ error: data.error.message });
+    // while (comments.length < commentCount) {
+    //     const response = await fetch(`https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&videoId=${id}&maxResults=100&key=${YOUTUBE_API_KEY}${pageToken ? `&pageToken=${pageToken}` : ""}`, {
+    //         method: "GET"
+    //     });
+    //     const data = await response.json();
+
+    //     if (data.error) {
+    //         return res.status(data.error.code).json({ error: data.error.message });
+    //     }
+    //     if (data.items.length === 0) return res.status(400).json({ message: "No comments found", status: false });
+    //     const newComments = data.items.map(
+    //         (item) => item.snippet.topLevelComment.snippet.textOriginal
+    //     );
+    //     comments = comments.concat(newComments);
+    //     console.log(data.nextPageToken);
+
+    //     pageToken = data.nextPageToken;
+    //     if (!pageToken) break;
     // }
-    // if (data.items.length === 0) return res.status(400).json({ message: "No comments found", status: false });
 
-    // const comments = data.items.map((item) => item.snippet.topLevelComment.snippet.textDisplay);
     const mockComments = []
 
     const resp = await fetch(`${BACKEND_URL}/analyze-comments`, {
