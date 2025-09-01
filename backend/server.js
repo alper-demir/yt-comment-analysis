@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import helmet from "helmet";
 import dotenv from "dotenv";
 import "./api/v1/config/db.config.js"
 import authRoutes from "./api/v1/routes/auth.routes.js"
@@ -13,12 +14,14 @@ import "./api/v1/models/index.js"
 import bodyParser from "body-parser";
 import sequelize from "./api/v1/config/db.config.js";
 import "./api/v1/cron/cleanPendingPayments.js";
+import "./api/v1/config/redis.config.js";
 
 dotenv.config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(helmet());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.set('trust proxy', true);
 

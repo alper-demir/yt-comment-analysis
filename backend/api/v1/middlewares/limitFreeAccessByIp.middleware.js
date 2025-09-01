@@ -5,18 +5,18 @@ const FREE_LIMIT = 2;
 
 export const limitFreeAccessByIp = async (req, res, next) => {
     const ip = req.clientIp || req.ip;
-    const { userId } = req.user;
+    const userId = req.user.id;
     try {
 
         if (userId !== null) {
             const user = await User.findByPk(userId, { attributes: ['tokens'] });
-            if (user.tokens > 0) {
+            if (parseInt(user.tokens) > 0) {
                 return next();
             }
         }
 
         let record = await TrialAccess.findOne({ where: { ip } });
-        
+
         if (!record) {
             record = await TrialAccess.create({ ip, usage_count: 1, last_access_at: new Date() });
             return next();
