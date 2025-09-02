@@ -39,27 +39,25 @@ export const getComments = async (req, res) => {
     if (commentCount < 1) commentCount = DEFAULT_COMMENT_COUNT;
     let comments = [];
     let pageToken = null;
-    console.log(commentCount);
 
-    // while (comments.length < commentCount) {
-    //     const response = await fetch(`https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&videoId=${id}&maxResults=100&key=${YOUTUBE_API_KEY}${pageToken ? `&pageToken=${pageToken}` : ""}`, {
-    //         method: "GET"
-    //     });
-    //     const data = await response.json();
+    while (comments.length < commentCount) {
+        const response = await fetch(`https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&videoId=${id}&maxResults=100&key=${YOUTUBE_API_KEY}${pageToken ? `&pageToken=${pageToken}` : ""}`, {
+            method: "GET"
+        });
+        const data = await response.json();
 
-    //     if (data.error) {
-    //         return res.status(data.error.code).json({ error: data.error.message });
-    //     }
-    //     if (data.items.length === 0) return res.status(400).json({ message: "No comments found", status: false });
-    //     const newComments = data.items.map(
-    //         (item) => item.snippet.topLevelComment.snippet.textOriginal
-    //     );
-    //     comments = comments.concat(newComments);
-    //     console.log(data.nextPageToken);
+        if (data.error) {
+            return res.status(data.error.code).json({ error: data.error.message });
+        }
+        if (data.items.length === 0) return res.status(400).json({ message: "No comments found", status: false });
+        const newComments = data.items.map(
+            (item) => item.snippet.topLevelComment.snippet.textOriginal
+        );
+        comments = comments.concat(newComments);
 
-    //     pageToken = data.nextPageToken;
-    //     if (!pageToken) break;
-    // }
+        pageToken = data.nextPageToken;
+        if (!pageToken) break;
+    }
 
     const mockComments = []
 
@@ -69,8 +67,8 @@ export const getComments = async (req, res) => {
             "Content-Type": "application/json",
             "Authorization": req.headers.authorization
         },
-        //body: JSON.stringify({ comments, videoId: id }),
-        body: JSON.stringify({ comments: mockComments, videoId: id })
+        body: JSON.stringify({ comments, videoId: id }),
+        //body: JSON.stringify({ comments: mockComments, videoId: id })
     })
 
     const anaylzedData = await resp.json();
@@ -140,35 +138,35 @@ export const analizeComments = async (req, res) => {
         const totalEstimate = estimatedInputTokens + outputBuffer;
 
         let trialAccess = false;
-        // // Not enough token, Check if the user has any free trial rights left (ip)
-        // if (user.tokens < totalEstimate) {
-        //     let record = await TrialAccess.findOne({ where: { ip: clientIp } });
-        //     if (!record) {
-        //         record = await TrialAccess.create({ ip: clientIp, usage_count: 1, last_access_at: new Date() });
-        //         trialAccess = true;
-        //     }
+        // Not enough token, Check if the user has any free trial rights left (ip)
+        if (user.tokens < totalEstimate) {
+            let record = await TrialAccess.findOne({ where: { ip: clientIp } });
+            if (!record) {
+                record = await TrialAccess.create({ ip: clientIp, usage_count: 1, last_access_at: new Date() });
+                trialAccess = true;
+            }
 
-        //     if (record.usage_count >= FREE_LIMIT) {
-        //         return res.status(403).json({
-        //             success: false,
-        //             message: "Not enough tokens and free trial limit reached.",
-        //         });
-        //     }
-        //     trialAccess = true;
-        //     record.usage_count += 1;
-        //     record.last_access_at = new Date();
-        //     await record.save();
-        // }
+            if (record.usage_count >= FREE_LIMIT) {
+                return res.status(403).json({
+                    success: false,
+                    message: "Not enough tokens and free trial limit reached.",
+                });
+            }
+            trialAccess = true;
+            record.usage_count += 1;
+            record.last_access_at = new Date();
+            await record.save();
+        }
 
-        // const completion = await openai.chat.completions.create({
-        //     model: "gpt-4o-mini",
-        //     messages: [{ role: "user", content: prompt }],
-        //     // max_tokens: 300,
-        //     //  temperature: 0.7,
-        // });
+        const completion = await openai.chat.completions.create({
+            model: "gpt-4o-mini",
+            messages: [{ role: "user", content: prompt }],
+            // max_tokens: 300,
+            //  temperature: 0.7,
+        });
 
-        // // // GPT response
-        // const responseText = completion.choices[0].message.content;
+        // // GPT response
+        const responseText = completion.choices[0].message.content;
 
         const mockResponse = {
             "positive": 5,
@@ -184,79 +182,79 @@ export const analizeComments = async (req, res) => {
         }
 
         // JSON parse, GPT gives text format in response
-        // let jsonResponse;
-        // try {
-        //     jsonResponse = JSON.parse(responseText);
-        // } catch {
-        //     return res.status(500).json({ error: "GPT response is not in JSON format", raw: responseText });
-        // }
+        let jsonResponse;
+        try {
+            jsonResponse = JSON.parse(responseText);
+        } catch {
+            return res.status(500).json({ error: "GPT response is not in JSON format", raw: responseText });
+        }
 
-        // const tokenUsage = completion.usage;
-        // const totalTokens = tokenUsage.total_tokens;
-        // const inputTokens = tokenUsage.prompt_tokens;
-        // const outputTokens = tokenUsage.completion_tokens;
+        const tokenUsage = completion.usage;
+        const totalTokens = tokenUsage.total_tokens;
+        const inputTokens = tokenUsage.prompt_tokens;
+        const outputTokens = tokenUsage.completion_tokens;
 
-        // jsonResponse.inputTokens = inputTokens;
-        // jsonResponse.outputTokens = outputTokens;
-        // jsonResponse.totalTokens = totalTokens;
-        // jsonResponse.commentCount = comments.length;
-        // jsonResponse.trialAccessAnalysis = trialAccess;
+        jsonResponse.inputTokens = inputTokens;
+        jsonResponse.outputTokens = outputTokens;
+        jsonResponse.totalTokens = totalTokens;
+        jsonResponse.commentCount = comments.length;
+        jsonResponse.trialAccessAnalysis = trialAccess;
 
-        // console.log("Token usage:", tokenUsage);
-        // console.log("Total token:", totalTokens);
-        // console.log("Input token:", inputTokens);
-        // console.log("Output token:", outputTokens);
-        // console.log("Trial Access:", trialAccess);
+        console.log("Token usage:", tokenUsage);
+        console.log("Total token:", totalTokens);
+        console.log("Input token:", inputTokens);
+        console.log("Output token:", outputTokens);
+        console.log("Trial Access:", trialAccess);
 
-        // // Reduce user tokens
-        // if (totalTokens <= user.tokens && !trialAccess) {
-        //     user.tokens -= totalTokens;
-        // } else {
-        //     // If actual usage > user balance, set it to 0
-        //     const subsidized = Math.abs(user.tokens - totalTokens); // The amount of tokens covered by the system
-        //     console.log("Subsidized tokens by the application: " + subsidized);
-        //     if (!trialAccess) user.tokens = 0;
-        // }
+        // Reduce user tokens
+        if (totalTokens <= user.tokens && !trialAccess) {
+            user.tokens -= totalTokens;
+        } else {
+            // If actual usage > user balance, set it to 0
+            const subsidized = Math.abs(user.tokens - totalTokens); // The amount of tokens covered by the system
+            console.log("Subsidized tokens by the application: " + subsidized);
+            if (!trialAccess) user.tokens = 0;
+        }
 
-        // await user.save();
+        await user.save();
 
-        // // Create analysis record
-        // await Analize.create({
-        //     ip: clientIp,
-        //     userId: userId ? userId : null,
-        //     positive_comment_count: jsonResponse.positive,
-        //     negative_comment_count: jsonResponse.negative,
-        //     neutral_comment_count: jsonResponse.neutral,
-        //     total_comment_count: comments.length,
-        //     positive_comment_summary: jsonResponse.liked_summary,
-        //     negative_comment_summary: jsonResponse.disliked_summary,
-        //     neutral_comment_summary: jsonResponse.neutral_summary,
-        //     input_token: inputTokens,
-        //     output_token: outputTokens,
-        //     total_token: totalTokens,
-        //     videoId,
-        //     trialAccessAnalysis: trialAccess
-        // })
-
+        // Create analysis record
         await Analize.create({
             ip: clientIp,
             userId: userId ? userId : null,
-            positive_comment_count: mockResponse.positive,
-            negative_comment_count: mockResponse.negative,
-            neutral_comment_count: mockResponse.neutral,
-            total_comment_count: mockResponse.commentCount,
-            positive_comment_summary: mockResponse.liked_summary,
-            negative_comment_summary: mockResponse.disliked_summary,
-            neutral_comment_summary: mockResponse.neutral_summary,
-            input_token: mockResponse.inputTokens,
-            output_token: mockResponse.outputTokens,
-            total_token: mockResponse.totalTokens,
+            positive_comment_count: jsonResponse.positive,
+            negative_comment_count: jsonResponse.negative,
+            neutral_comment_count: jsonResponse.neutral,
+            total_comment_count: comments.length,
+            positive_comment_summary: jsonResponse.liked_summary,
+            negative_comment_summary: jsonResponse.disliked_summary,
+            neutral_comment_summary: jsonResponse.neutral_summary,
+            input_token: inputTokens,
+            output_token: outputTokens,
+            total_token: totalTokens,
             videoId,
-            trialAccessAnalysis: trialAccess,
+            trialAccessAnalysis: trialAccess
         })
 
-        //return res.status(200).json(jsonResponse);
-        return res.status(200).json(mockResponse);
+        // await Analize.create({
+        //     ip: clientIp,
+        //     userId: userId ? userId : null,
+        //     positive_comment_count: mockResponse.positive,
+        //     negative_comment_count: mockResponse.negative,
+        //     neutral_comment_count: mockResponse.neutral,
+        //     total_comment_count: mockResponse.commentCount,
+        //     positive_comment_summary: mockResponse.liked_summary,
+        //     negative_comment_summary: mockResponse.disliked_summary,
+        //     neutral_comment_summary: mockResponse.neutral_summary,
+        //     input_token: mockResponse.inputTokens,
+        //     output_token: mockResponse.outputTokens,
+        //     total_token: mockResponse.totalTokens,
+        //     videoId,
+        //     trialAccessAnalysis: trialAccess,
+        // })
+
+        return res.status(200).json(jsonResponse);
+        //return res.status(200).json(mockResponse);
     } catch (error) {
         console.error("API error:", error);
         res.status(500).json({ error: "Server error" });
