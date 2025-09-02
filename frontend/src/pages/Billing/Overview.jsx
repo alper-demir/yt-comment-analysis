@@ -56,7 +56,7 @@ const Overview = () => {
                     {loading ? (
                         <Skeleton className="h-6 w-32 rounded-md" />
                     ) : (
-                        <p className="text-2xl font-bold">{remainingTokens} {t("billing.overview.tokens")}</p>
+                        <p className="text-2xl font-bold">{remainingTokens.toLocaleString()} {t("billing.overview.tokens")}</p>
                     )}
                 </CardContent>
             </Card>
@@ -65,7 +65,7 @@ const Overview = () => {
                 {tokenPlans.map((plan) => (
                     <Card key={plan.id}>
                         <CardHeader>
-                            <CardTitle>{plan.tokens} {t("billing.overview.tokens")}</CardTitle>
+                            <CardTitle>{plan.tokens.toLocaleString()} {t("billing.overview.tokens")}</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <p>{t("billing.overview.price")}: {plan.price + plan.currency}</p>

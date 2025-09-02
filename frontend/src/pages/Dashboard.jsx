@@ -71,7 +71,7 @@ const DashboardPage = () => {
                         </TooltipProvider>
                     </CardHeader>
                     <CardContent>
-                        <p className="text-2xl font-bold">{totalAnalyses}</p>
+                        <p className="text-2xl font-bold">{totalAnalyses.toLocaleString()}</p>
                     </CardContent>
                 </Card>
 
@@ -91,7 +91,7 @@ const DashboardPage = () => {
                         </TooltipProvider>
                     </CardHeader>
                     <CardContent>
-                        <p className="text-2xl font-bold">{totalComments}</p>
+                        <p className="text-2xl font-bold">{totalComments.toLocaleString()}</p>
                     </CardContent>
                 </Card>
 
@@ -111,7 +111,7 @@ const DashboardPage = () => {
                         </TooltipProvider>
                     </CardHeader>
                     <CardContent>
-                        <p className="text-2xl font-bold">{totalTokens}</p>
+                        <p className="text-2xl font-bold">{totalTokens.toLocaleString()}</p>
                     </CardContent>
                 </Card>
             </div>
@@ -135,7 +135,7 @@ const DashboardPage = () => {
                     </CardHeader>
                     <CardContent>
                         <div className="flex justify-between items-center">
-                            <p className="text-2xl font-bold">{remainingTokens}</p>
+                            <p className="text-2xl font-bold">{remainingTokens.toLocaleString()}</p>
                             <Button onClick={() => navigate("/checkout")}>
                                 {t("dashboard.summaryCards.buyTokens")}
                             </Button>
@@ -165,7 +165,7 @@ const DashboardPage = () => {
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <p className="text-xl font-bold">{sentiment.positive}</p>
+                        <p className="text-xl font-bold">{sentiment.positive.toLocaleString()}</p>
                     </CardContent>
                 </Card>
 
@@ -176,7 +176,7 @@ const DashboardPage = () => {
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <p className="text-xl font-bold">{sentiment.negative}</p>
+                        <p className="text-xl font-bold">{sentiment.negative.toLocaleString()}</p>
                     </CardContent>
                 </Card>
 
@@ -187,7 +187,7 @@ const DashboardPage = () => {
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <p className="text-xl font-bold">{sentiment.neutral}</p>
+                        <p className="text-xl font-bold">{sentiment.neutral.toLocaleString()}</p>
                     </CardContent>
                 </Card>
             </div>
@@ -221,11 +221,11 @@ const DashboardPage = () => {
                                             {t("dashboard.lastAnalysesTable.seeDetail")}
                                         </Link>
                                     </TableCell>
-                                    <TableCell>{a.positive_comment_count}</TableCell>
-                                    <TableCell>{a.negative_comment_count}</TableCell>
-                                    <TableCell>{a.neutral_comment_count}</TableCell>
-                                    <TableCell>{a.total_comment_count}</TableCell>
-                                    <TableCell>{a.total_token}</TableCell>
+                                    <TableCell>{a.positive_comment_count.toLocaleString()}</TableCell>
+                                    <TableCell>{a.negative_comment_count.toLocaleString()}</TableCell>
+                                    <TableCell>{a.neutral_comment_count.toLocaleString()}</TableCell>
+                                    <TableCell>{a.total_comment_count.toLocaleString()}</TableCell>
+                                    <TableCell>{a.total_token.toLocaleString()}</TableCell>
                                     <TableCell>
                                         <TooltipProvider>
                                             <Tooltip>

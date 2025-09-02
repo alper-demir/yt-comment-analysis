@@ -97,10 +97,10 @@ const AnalizeHistory = () => {
                                     />
                                 </Link>
                             </TableCell>
-                            <TableCell>{analize.positive_comment_count}</TableCell>
-                            <TableCell>{analize.negative_comment_count}</TableCell>
-                            <TableCell>{analize.neutral_comment_count}</TableCell>
-                            <TableCell>{analize.total_comment_count}</TableCell>
+                            <TableCell>{analize.positive_comment_count.toLocaleString()}</TableCell>
+                            <TableCell>{analize.negative_comment_count.toLocaleString()}</TableCell>
+                            <TableCell>{analize.neutral_comment_count.toLocaleString()}</TableCell>
+                            <TableCell>{analize.total_comment_count.toLocaleString()}</TableCell>
                             <TableCell>
                                 <TooltipProvider>
                                     <Tooltip>
@@ -113,7 +113,7 @@ const AnalizeHistory = () => {
                                     </Tooltip>
                                 </TooltipProvider>
                             </TableCell>
-                            <TableCell>{analize.total_token}</TableCell>
+                            <TableCell>{analize.total_token.toLocaleString()}</TableCell>
                             <TableCell className="text-right">
                                 <Link to={`/analysis/${analize.id}`}>
                                     <Button variant="outline">{t("analysisHistory.view")}</Button>

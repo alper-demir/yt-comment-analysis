@@ -96,17 +96,17 @@ const AnalizeResult = ({ analysis, videoId = null }) => {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <Card className="text-center p-4">
                     <p className="font-medium">{t("analysis.positive")}</p>
-                    <p className="text-2xl font-bold">{analysis.positive || 0}</p>
+                    <p className="text-2xl font-bold">{analysis.positive.toLocaleString() || 0}</p>
                     <p className="text-sm">{percentages.positive}%</p>
                 </Card>
                 <Card className="text-center p-4">
                     <p className="font-medium">{t("analysis.negative")}</p>
-                    <p className="text-2xl font-bold">{analysis.negative || 0}</p>
+                    <p className="text-2xl font-bold">{analysis.negative.toLocaleString() || 0}</p>
                     <p className="text-sm">{percentages.negative}%</p>
                 </Card>
                 <Card className="text-center p-4">
                     <p className="font-medium">{t("analysis.neutral")}</p>
-                    <p className="text-2xl font-bold">{analysis.neutral || 0}</p>
+                    <p className="text-2xl font-bold">{analysis.neutral.toLocaleString() || 0}</p>
                     <p className="text-sm">{percentages.neutral}%</p>
                 </Card>
             </div>
@@ -114,15 +114,15 @@ const AnalizeResult = ({ analysis, videoId = null }) => {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <Card className="text-center p-4">
                     <p className="font-medium">{t("analysis.inputTokens")}</p>
-                    <p className="text-2xl font-bold">{analysis.inputTokens || 0}</p>
+                    <p className="text-2xl font-bold">{analysis.inputTokens.toLocaleString() || 0}</p>
                 </Card>
                 <Card className="text-center p-4">
                     <p className="font-medium">{t("analysis.outputTokens")}</p>
-                    <p className="text-2xl font-bold">{analysis.outputTokens || 0}</p>
+                    <p className="text-2xl font-bold">{analysis.outputTokens.toLocaleString() || 0}</p>
                 </Card>
                 <Card className="text-center p-4">
                     <p className="font-medium">{t("analysis.totalTokens")}</p>
-                    <p className="text-2xl font-bold">{analysis.totalTokens || 0}</p>
+                    <p className="text-2xl font-bold">{analysis.totalTokens.toLocaleString() || 0}</p>
                 </Card>
             </div>
             <Separator />

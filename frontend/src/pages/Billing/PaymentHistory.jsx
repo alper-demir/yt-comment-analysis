@@ -115,7 +115,7 @@ const PaymentHistory = () => {
                             </TooltipProvider>
                         </TableCell>
                         <TableCell>{payment.TokenPlan?.name || payment.planId}</TableCell>
-                        <TableCell>{payment.amount}</TableCell>
+                        <TableCell>{payment.amount.toLocaleString()}</TableCell>
                         <TableCell>{`${payment.price} ${payment.currency}`}</TableCell>
                         <TableCell>
                             <span className={`px-2 py-1 rounded-full text-xs font-semibold ${payment.status === "SUCCESS" ? "bg-green-100 text-green-800" : payment.status === "PENDING" ? "bg-yellow-100 text-yellow-800" : "bg-red-100 text-red-800"}`}>
