@@ -94,8 +94,9 @@ const Checkout = () => {
                         </div>
 
                         <CardHeader className="text-center">
-                            <CardTitle>
+                            <CardTitle className="flex flex-col gap-y-2">
                                 {plan.tokens.toLocaleString()} {t("checkout.tokens")}
+                                <span className="text-lg text-muted-foreground">{plan.name}</span>
                             </CardTitle>
                         </CardHeader>
                         <Separator />
@@ -115,7 +116,7 @@ const Checkout = () => {
                 <Card className="mt-8">
                     <CardHeader>
                         <CardTitle className="text-xl">
-                            {t("checkout.selectedPlan")}
+                            {t("checkout.selectedPlan")}: {selectedPlan.name}
                         </CardTitle>
                     </CardHeader>
                     <CardContent className="flex justify-between items-center">
