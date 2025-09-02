@@ -33,11 +33,13 @@ const openai = new OpenAI({
 
 export const getComments = async (req, res) => {
     const { id } = req.params;
-    let commentCount = parseInt(req.query.commentCount, 10) || DEFAULT_COMMENT_COUNT;
+    const { commentLimit, language } = req.query;
+    let commentCount = parseInt(commentLimit, 10) || DEFAULT_COMMENT_COUNT;
     if (commentCount > MAX_COMMENT_COUNT) commentCount = MAX_COMMENT_COUNT;
     if (commentCount < 1) commentCount = DEFAULT_COMMENT_COUNT;
     let comments = [];
     let pageToken = null;
+    console.log(commentCount);
 
     // while (comments.length < commentCount) {
     //     const response = await fetch(`https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&videoId=${id}&maxResults=100&key=${YOUTUBE_API_KEY}${pageToken ? `&pageToken=${pageToken}` : ""}`, {
@@ -61,7 +63,7 @@ export const getComments = async (req, res) => {
 
     const mockComments = []
 
-    const resp = await fetch(`${BACKEND_URL}/analyze-comments`, {
+    const resp = await fetch(`${BACKEND_URL}/analyze-comments?${language ? `&language=${language}` : ""}`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -79,6 +81,7 @@ export const analizeComments = async (req, res) => {
     const clientIp = req.clientIp;
     const userId = req.user.id;
     const { videoId } = req.body;
+    const { language } = req.query;
 
     try {
         const { comments } = req.body;
@@ -90,36 +93,54 @@ export const analizeComments = async (req, res) => {
         if (!user) return res.status(404).json({ error: "User not found" });
 
         // GPT promt
+        // const prompt = `
+        //                 You are a helpful assistant for sentiment analysis and summarization.
+        //                 Analyze the following user comments about a YouTube video. 
+        //                 Return a JSON object with counts of positive, negative, and neutral comments, 
+        //                 and write natural language summaries for what users liked and disliked.
+
+        //                 Comments:
+        //                 ${comments.map((c, i) => `${i + 1}. ${c}`).join("\n")}
+
+        //                 Respond in JSON format like this:
+        //                 {
+        //                 "positive": <number>,
+        //                 "negative": <number>,
+        //                 "neutral": <number>,
+        //                 "liked_summary": "<natural language summary of what users liked>",
+        //                 "disliked_summary": "<natural language summary of what users disliked>"
+        //                 }
+        //                 `;
+
         const prompt = `
-                        You are a helpful assistant for sentiment analysis and summarization.
-                        Analyze the following user comments about a YouTube video. 
-                        Return a JSON object with counts of positive, negative, and neutral comments, 
-                        and write natural language summaries for what users liked and disliked.
+                    Classify YouTube comments as positive (praise, excitement, recommendations), negative (criticism, complaints, dislikes), or neutral (objective, suggestions, mixed feelings). Count each category. Write concise summaries (3-4 sentences) in the specified language, highlighting main themes. If a category is empty, use "No [category] comments found." Output ONLY valid JSON. Do not include explanations, notes, or Markdown code fences.
 
-                        Comments:
-                        ${comments.map((c, i) => `${i + 1}. ${c}`).join("\n")}
+                    Comments:
+                    ${comments.map((c, i) => `${i + 1}. ${c}`).join("\n")}
 
-                        Respond in JSON format like this:
-                        {
-                        "positive": <number>,
-                        "negative": <number>,
-                        "neutral": <number>,
-                        "liked_summary": "<natural language summary of what users liked>",
-                        "disliked_summary": "<natural language summary of what users disliked>"
-                        }
-                        `;
+                    Summary language: ${language || "en"} ("tr" for Turkish, "en" for English). Analyze comments in their original languages, summarize in the specified language.
+
+                    Respond in JSON format like this:
+                    {
+                    "positive": <number>,
+                    "negative": <number>,
+                    "neutral": <number>,
+                    "liked_summary": "<positive summary>",
+                    "disliked_summary": "<negative summary>",
+                    "neutral_summary": "<neutral summary>"
+                    }`;
 
 
-        // const enc = encoding_for_model("gpt-3.5-turbo");
-        // const estimatedInputTokens = enc.encode(prompt).length;
-        // enc.free();
-        // console.log("Estimated input tokens:", estimatedInputTokens);
+        const enc = encoding_for_model("gpt-4o-mini");
+        const estimatedInputTokens = enc.encode(prompt).length;
+        enc.free();
+        console.log("Estimated input tokens:", estimatedInputTokens);
 
-        // const outputBuffer = 300; // Secure estimated token output
-        // const totalEstimate = estimatedInputTokens + outputBuffer;
+        const outputBuffer = 300; // Secure estimated token output
+        const totalEstimate = estimatedInputTokens + outputBuffer;
 
         let trialAccess = false;
-        // Not enough token, Check if the user has any free trial rights left (ip)
+        // // Not enough token, Check if the user has any free trial rights left (ip)
         // if (user.tokens < totalEstimate) {
         //     let record = await TrialAccess.findOne({ where: { ip: clientIp } });
         //     if (!record) {
@@ -140,13 +161,13 @@ export const analizeComments = async (req, res) => {
         // }
 
         // const completion = await openai.chat.completions.create({
-        //     model: "gpt-3.5-turbo",
+        //     model: "gpt-4o-mini",
         //     messages: [{ role: "user", content: prompt }],
         //     // max_tokens: 300,
         //     //  temperature: 0.7,
         // });
 
-        // // GPT response
+        // // // GPT response
         // const responseText = completion.choices[0].message.content;
 
         const mockResponse = {
@@ -155,6 +176,7 @@ export const analizeComments = async (req, res) => {
             "neutral": 1,
             "liked_summary": "Users liked the official release of the soundtrack, the nostalgic feelings it brought, and the quality of the episode.",
             "disliked_summary": "One user expressed sadness over a character death in Star Wars, which was the only negative comment.",
+            "neutral_summary": "Neutral summary placeholder.",
             "inputTokens": "564",
             "outputTokens": "134",
             "totalTokens": "698",
@@ -208,6 +230,7 @@ export const analizeComments = async (req, res) => {
         //     total_comment_count: comments.length,
         //     positive_comment_summary: jsonResponse.liked_summary,
         //     negative_comment_summary: jsonResponse.disliked_summary,
+        //     neutral_comment_summary: jsonResponse.neutral_summary,
         //     input_token: inputTokens,
         //     output_token: outputTokens,
         //     total_token: totalTokens,
@@ -224,6 +247,7 @@ export const analizeComments = async (req, res) => {
             total_comment_count: mockResponse.commentCount,
             positive_comment_summary: mockResponse.liked_summary,
             negative_comment_summary: mockResponse.disliked_summary,
+            neutral_comment_summary: mockResponse.neutral_summary,
             input_token: mockResponse.inputTokens,
             output_token: mockResponse.outputTokens,
             total_token: mockResponse.totalTokens,
@@ -281,6 +305,7 @@ export const getAnalize = async (req, res) => {
             commentCount: analize.total_comment_count,
             liked_summary: analize.positive_comment_summary,
             disliked_summary: analize.negative_comment_summary,
+            neutral_summary: analize.neutral_comment_summary,
             inputTokens: analize.input_token,
             outputTokens: analize.output_token,
             totalTokens: analize.total_token,

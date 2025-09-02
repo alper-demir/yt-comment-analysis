@@ -96,6 +96,14 @@
         },
         "success": {
             "analysisCompleted": "Analiz tamamlandı!"
+        },
+        "commentLimitLabel": "Yorum",
+        "commentLimitHelp": "Analiz edilecek maksimum yorum sayısı",
+        "languageLabel": "Dil",
+        "languageHelp": "Özetin hazırlanacağı dil",
+        "language": {
+            "tr": "Türkçe",
+            "en": "English"
         }
     },
     "analysis": {
@@ -110,8 +118,10 @@
         "outputTokens": "Çıktı Tokenleri",
         "totalTokens": "Toplam Tokenler",
         "likedSummary": "Beğenilen Özet",
+        "neutralSummary": "Nötr Özet",
         "dislikedSummary": "Beğenilmeyen Özet",
-        "noData": "Veri Yok"
+        "noData": "Veri Yok",
+        "totalComments": "Toplam {{count}} yorum analiz edildi."
     },
     "analysisDetail": {
         "title": "Analiz Detayı",

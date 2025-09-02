@@ -96,6 +96,14 @@
         },
         "success": {
             "analysisCompleted": "Analysis completed!"
+        },
+        "commentLimitLabel": "Comments",
+        "commentLimitHelp": "Select the maximum number of comments to analyze",
+        "languageLabel": "Language",
+        "languageHelp": "Choose the language for the analysis summary",
+        "language": {
+            "tr": "Turkish",
+            "en": "English"
         }
     },
     "analysis": {
@@ -111,7 +119,9 @@
         "totalTokens": "Total Tokens",
         "likedSummary": "Liked Summary",
         "dislikedSummary": "Disliked Summary",
-        "noData": "No Data"
+        "neutralSummary": "Neutral Summary",
+        "noData": "No Data",
+        "totalComments": "Total of {{count}} comments were analyzed."
     },
     "analysisDetail": {
         "title": "Analysis Detail",

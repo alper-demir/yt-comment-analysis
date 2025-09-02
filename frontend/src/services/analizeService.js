@@ -47,3 +47,19 @@ export const getDashboardSummary = async () => {
         console.log(error);
     }
 };
+
+export const analizeVideoComments = async (videoId, commentLimit, language) => {
+    const token = localStorage.getItem("token");
+    try {
+        const response = await fetch(`${BACKEND_URL}/yt-video/${videoId}?commentLimit=${commentLimit || 100}&language=${language || "en"}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: token ? `Bearer ${token}` : ""
+            }
+        });
+        return response;
+    } catch (error) {
+        console.log(error);
+    }
+}

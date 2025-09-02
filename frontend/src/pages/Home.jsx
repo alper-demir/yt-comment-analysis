@@ -7,9 +7,16 @@ import { Label } from "@/components/ui/label";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import AnalizeResult from "../components/AnalizeResult";
 import { useTranslation } from "react-i18next";
-
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { HelpCircle } from "lucide-react";
+import { useSelector } from 'react-redux';
+import { useEffect } from "react";
+import { analizeVideoComments } from "../services/analizeService";
 
 const Home = () => {
+
+  const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
   const [url, setUrl] = useState("");
   const [isValidUrl, setIsValidUrl] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
@@ -17,8 +24,14 @@ const Home = () => {
   const [analysis, setAnalysis] = useState(null);
 
   const YOUTUBE_ID_LENGTH = 11;
-  const token = localStorage.getItem("token");
   const { t } = useTranslation();
+
+  const [commentLimit, setCommentLimit] = useState("100");
+  const [language, setLanguage] = useState(localStorage.getItem("p_analysis_summary_lang") || "tr");
+
+  useEffect(() => {
+    localStorage.setItem("p_analysis_summary_lang", language);
+  }, [language]);
 
   // Extract video ID
   const extractVideoId = (url) => {
@@ -47,13 +60,10 @@ const Home = () => {
     setAnalysis(null);
 
     try {
-      const response = await fetch(`http://localhost:3000/api/v1/yt-video/${videoId}`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json", Authorization: token ? `Bearer ${token}` : "" },
-      });
-      const data = await response.json();
+      const res = await analizeVideoComments(videoId, commentLimit, language);
+      const data = await res.json();
       console.log(data);
-      if (!response.ok || data.success === false) {
+      if (!res.ok || data.success === false) {
         toast.error(data.message);
         return;
       }
@@ -106,6 +116,67 @@ const Home = () => {
             {!isValidUrl && (
               <p className="text-sm text-red-500">{error}</p>
             )}
+
+            <div className="flex gap-4 items-end">
+
+              <div className="flex flex-col gap-1">
+                <div className="flex items-center gap-1">
+                  <span className="text-sm text-muted-foreground">
+                    {t("home.commentLimitLabel")}
+                  </span>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <HelpCircle className="w-3.5 h-3.5 text-muted-foreground cursor-pointer" />
+                      </TooltipTrigger>
+                      <TooltipContent side="top">
+                        <p>{t("home.commentLimitHelp")}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
+                <Select value={commentLimit} onValueChange={setCommentLimit} disabled={!isAuthenticated}>
+                  <SelectTrigger className="h-8 w-[90px] text-sm px-2">
+                    <SelectValue placeholder="100" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem key={100} value="100">{100}</SelectItem>
+                    <SelectItem key={200} value="200">{200}</SelectItem>
+                    <SelectItem key={300} value="300">{300}</SelectItem>
+                    {/* <SelectItem key={400} value="400">{400}</SelectItem>
+                    <SelectItem key={500} value="500">{500}</SelectItem> */}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <div className="flex items-center gap-1">
+                  <span className="text-sm text-muted-foreground">
+                    {t("home.languageLabel")}
+                  </span>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <HelpCircle className="w-3.5 h-3.5 text-muted-foreground cursor-pointer" />
+                      </TooltipTrigger>
+                      <TooltipContent side="top">
+                        <p>{t("home.languageHelp")}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
+                <Select value={language} onValueChange={setLanguage} disabled={!isAuthenticated}>
+                  <SelectTrigger className="h-8 w-[110px] text-sm px-2">
+                    <SelectValue placeholder={!isAuthenticated ? "English" : "Türkçe"} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="tr">{t("home.language.tr")}</SelectItem>
+                    <SelectItem value="en">{t("home.language.en")}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
           </div>
 
           {isLoading && <LoadingSpinner size="md" />}

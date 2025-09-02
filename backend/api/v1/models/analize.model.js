@@ -29,6 +29,9 @@ const Analize = sequelize.define("Analize", {
     negative_comment_summary: {
         type: DataTypes.TEXT,
     },
+    neutral_comment_summary: {
+        type: DataTypes.TEXT,
+    },
     input_token: {
         type: DataTypes.INTEGER,
     },

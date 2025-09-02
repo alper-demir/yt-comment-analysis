@@ -88,6 +88,11 @@ const AnalizeResult = ({ analysis, videoId = null }) => {
                 {chartData && <Pie data={chartData} options={{ responsive: true, plugins: { legend: { position: "top" }, tooltip: { callbacks: { label: (ctx) => { const label = ctx.label || ""; const value = ctx.parsed || 0; const percent = ((value / totalComments) * 100).toFixed(1); return `${label}: ${value} (${percent}%)`; } } } } }} />}
             </div>
 
+            
+            <p className="text-sm text-muted-foreground text-center">
+                {t("analysis.totalComments", { count: analysis.commentCount })}
+            </p>
+
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <Card className="text-center p-4">
                     <p className="font-medium">{t("analysis.positive")}</p>
@@ -120,14 +125,20 @@ const AnalizeResult = ({ analysis, videoId = null }) => {
                     <p className="text-2xl font-bold">{analysis.totalTokens || 0}</p>
                 </Card>
             </div>
-
+            <Separator />
             <div className="space-y-2">
                 <p className="font-medium">{t("analysis.likedSummary")}</p>
                 <p>{analysis.liked_summary || t("analysis.noData")}</p>
             </div>
+            <Separator />
             <div className="space-y-2">
                 <p className="font-medium">{t("analysis.dislikedSummary")}</p>
                 <p>{analysis.disliked_summary || t("analysis.noData")}</p>
+            </div>
+            <Separator />
+            <div className="space-y-2">
+                <p className="font-medium">{t("analysis.neutralSummary")}</p>
+                <p>{analysis.neutral_summary || t("analysis.noData")}</p>
             </div>
         </div>
     )
