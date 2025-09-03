@@ -88,7 +88,6 @@ export const analizeComments = async (req, res) => {
         }
 
         const user = await User.findByPk(userId, { attributes: ['tokens', 'id'] });
-        if (!user) return res.status(404).json({ error: "User not found" });
 
         // GPT promt
         // const prompt = `
@@ -138,8 +137,27 @@ export const analizeComments = async (req, res) => {
         const totalEstimate = estimatedInputTokens + outputBuffer;
 
         let trialAccess = false;
-        // Not enough token, Check if the user has any free trial rights left (ip)
-        if (user.tokens < totalEstimate) {
+
+        if (!user) {
+            let record = await TrialAccess.findOne({ where: { ip: clientIp } });
+            if (!record) {
+                record = await TrialAccess.create({ ip: clientIp, usage_count: 1, last_access_at: new Date() });
+                trialAccess = true;
+            }
+
+            if (record.usage_count >= FREE_LIMIT) {
+                return res.status(403).json({
+                    success: false,
+                    message: "Free trial limit reached.",
+                });
+            }
+            trialAccess = true;
+            record.usage_count += 1;
+            record.last_access_at = new Date();
+            await record.save();
+        }
+
+        if (user && user.tokens < totalEstimate) {
             let record = await TrialAccess.findOne({ where: { ip: clientIp } });
             if (!record) {
                 record = await TrialAccess.create({ ip: clientIp, usage_count: 1, last_access_at: new Date() });
@@ -207,16 +225,17 @@ export const analizeComments = async (req, res) => {
         console.log("Trial Access:", trialAccess);
 
         // Reduce user tokens
-        if (totalTokens <= user.tokens && !trialAccess) {
-            user.tokens -= totalTokens;
-        } else {
-            // If actual usage > user balance, set it to 0
-            const subsidized = Math.abs(user.tokens - totalTokens); // The amount of tokens covered by the system
-            console.log("Subsidized tokens by the application: " + subsidized);
-            if (!trialAccess) user.tokens = 0;
+        if (user) {
+            if (totalTokens <= user.tokens && !trialAccess) {
+                user.tokens -= totalTokens;
+            } else {
+                // If actual usage > user balance, set it to 0
+                const subsidized = Math.abs(user.tokens - totalTokens); // The amount of tokens covered by the system
+                console.log("Subsidized tokens by the application: " + subsidized);
+                if (!trialAccess) user.tokens = 0;
+            }
+            await user.save();
         }
-
-        await user.save();
 
         // Create analysis record
         await Analize.create({
